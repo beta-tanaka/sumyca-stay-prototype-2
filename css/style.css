@@ -1192,3 +1192,278 @@ body {
   .filter-drawer-body { padding: 0; }
   .filter-drawer-overlay { display: none !important; }
 }
+
+/* ============================================================
+   CHAT PANEL — Phase 2
+   予約に紐づくゲスト ↔ ホスト / サポートメッセージ
+   ============================================================ */
+
+.chat-overlay {
+  display: none;
+  position: fixed; inset: 0;
+  background: rgba(0,0,0,0.35);
+  z-index: 200;
+  backdrop-filter: blur(2px);
+}
+.chat-overlay.open { display: block; }
+
+.chat-panel {
+  position: fixed;
+  top: 0; right: 0; bottom: 0;
+  width: 420px;
+  max-width: 100vw;
+  background: var(--white);
+  z-index: 201;
+  display: flex;
+  flex-direction: column;
+  transform: translateX(100%);
+  transition: transform 0.3s cubic-bezier(0.4,0,0.2,1);
+  box-shadow: -8px 0 48px rgba(0,0,0,0.14);
+}
+.chat-panel.open { transform: translateX(0); }
+@media (max-width: 640px) { .chat-panel { width: 100%; } }
+
+/* ---- Panel header ---- */
+.chat-header {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 14px 16px;
+  border-bottom: 1px solid var(--gray-2);
+  flex-shrink: 0;
+}
+.chat-header__back {
+  background: var(--gray-1);
+  border: none;
+  width: 36px; height: 36px;
+  border-radius: 50%;
+  cursor: pointer;
+  font-size: 1.1rem;
+  flex-shrink: 0;
+  display: flex; align-items: center; justify-content: center;
+  transition: background 0.15s;
+}
+.chat-header__back:hover { background: var(--gray-2); }
+.chat-header__img {
+  width: 44px; height: 44px;
+  border-radius: var(--r-sm);
+  object-fit: cover;
+  flex-shrink: 0;
+}
+.chat-header__info { flex: 1; min-width: 0; }
+.chat-header__name {
+  font-size: 0.9375rem;
+  font-weight: 800;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.chat-header__meta { font-size: 0.75rem; color: var(--gray-3); margin-top: 2px; }
+.chat-header__online {
+  font-size: 0.7rem; font-weight: 700;
+  color: var(--green);
+  display: flex; align-items: center; gap: 4px;
+  flex-shrink: 0;
+}
+.chat-header__online::before {
+  content: '';
+  width: 7px; height: 7px;
+  background: var(--green);
+  border-radius: 50%;
+}
+
+/* ---- Booking context strip ---- */
+.chat-context {
+  background: var(--teal-bg);
+  border-bottom: 1px solid var(--gray-2);
+  padding: 10px 20px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  flex-shrink: 0;
+}
+.chat-context__label { font-size: 0.7rem; color: var(--gray-3); font-weight: 600; text-transform: uppercase; letter-spacing: 0.04em; }
+.chat-context__val { font-size: 0.8125rem; font-weight: 700; color: var(--dark); margin-top: 1px; }
+.chat-context__code {
+  font-size: 0.7rem;
+  background: var(--gray-2);
+  color: var(--gray-4);
+  padding: 3px 8px;
+  border-radius: 6px;
+  font-weight: 700;
+  flex-shrink: 0;
+}
+
+/* ---- Messages area ---- */
+.chat-messages {
+  flex: 1;
+  overflow-y: auto;
+  padding: 20px 16px 12px;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  -webkit-overflow-scrolling: touch;
+  scroll-behavior: smooth;
+}
+
+.msg-date {
+  text-align: center;
+  font-size: 0.68rem;
+  color: var(--gray-3);
+  font-weight: 600;
+  letter-spacing: 0.04em;
+  margin: 12px 0 8px;
+  position: relative;
+}
+.msg-date span {
+  background: var(--white);
+  padding: 0 10px;
+  position: relative;
+  z-index: 1;
+}
+.msg-date::before {
+  content: '';
+  position: absolute;
+  top: 50%; left: 0; right: 0;
+  height: 1px;
+  background: var(--gray-2);
+}
+
+/* Message row */
+.msg {
+  display: flex;
+  gap: 8px;
+  align-items: flex-end;
+  max-width: 86%;
+  margin-bottom: 2px;
+}
+.msg--guest {
+  align-self: flex-end;
+  flex-direction: row-reverse;
+}
+.msg--host, .msg--auto { align-self: flex-start; }
+.msg--system { align-self: center; max-width: 100%; }
+
+/* consecutive messages from same sender: collapse avatar */
+.msg.no-avatar .msg__avatar { visibility: hidden; }
+
+.msg__avatar {
+  width: 30px; height: 30px;
+  border-radius: 50%;
+  object-fit: cover;
+  flex-shrink: 0;
+  font-size: 0.8rem;
+  background: var(--gray-2);
+  display: flex; align-items: center; justify-content: center;
+}
+
+.msg__col { display: flex; flex-direction: column; gap: 2px; }
+
+.msg__auto-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  font-size: 0.6rem;
+  font-weight: 700;
+  color: var(--teal);
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+  margin-bottom: 3px;
+}
+
+.msg__bubble {
+  padding: 9px 14px;
+  border-radius: 18px;
+  font-size: 0.875rem;
+  line-height: 1.55;
+  word-break: break-word;
+}
+.msg--host .msg__bubble, .msg--auto .msg__bubble {
+  background: var(--gray-1);
+  color: var(--dark);
+  border-bottom-left-radius: 4px;
+}
+.msg--guest .msg__bubble {
+  background: var(--teal);
+  color: var(--white);
+  border-bottom-right-radius: 4px;
+}
+.msg--system .msg__bubble {
+  background: var(--teal-bg);
+  color: var(--gray-4);
+  font-size: 0.78rem;
+  text-align: center;
+  border-radius: var(--r-md);
+  padding: 8px 16px;
+  border: 1px solid var(--gray-2);
+}
+
+.msg__time {
+  font-size: 0.63rem;
+  color: var(--gray-3);
+  padding: 0 4px;
+  align-self: flex-end;
+  flex-shrink: 0;
+}
+
+/* ---- Chat input ---- */
+.chat-input-wrap {
+  padding: 10px 14px;
+  border-top: 1px solid var(--gray-2);
+  background: var(--white);
+  flex-shrink: 0;
+  display: flex;
+  align-items: flex-end;
+  gap: 8px;
+}
+.chat-input {
+  flex: 1;
+  border: 1.5px solid var(--gray-2);
+  border-radius: 22px;
+  padding: 10px 16px;
+  font-size: 0.9rem;
+  font-family: var(--font);
+  resize: none;
+  min-height: 42px;
+  max-height: 120px;
+  line-height: 1.4;
+  outline: none;
+  transition: border-color 0.15s;
+  overflow-y: auto;
+}
+.chat-input:focus { border-color: var(--teal); }
+.chat-send {
+  width: 42px; height: 42px;
+  border-radius: 50%;
+  background: var(--teal);
+  color: var(--white);
+  border: none;
+  cursor: pointer;
+  display: flex; align-items: center; justify-content: center;
+  flex-shrink: 0;
+  transition: background 0.15s, transform 0.1s;
+}
+.chat-send:hover { background: var(--teal-lt); }
+.chat-send:active { transform: scale(0.93); }
+.chat-send svg { width: 17px; height: 17px; }
+
+/* chat button on trip card */
+.btn--chat {
+  background: transparent;
+  border: 1.5px solid var(--teal);
+  color: var(--teal);
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+}
+.btn--chat:hover { background: var(--teal-bg); }
+.btn--chat .chat-unread {
+  background: var(--amber);
+  color: var(--white);
+  font-size: 0.6rem;
+  font-weight: 900;
+  width: 16px; height: 16px;
+  border-radius: 50%;
+  display: flex; align-items: center; justify-content: center;
+}
