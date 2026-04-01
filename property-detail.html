@@ -161,6 +161,10 @@
         <a href="my-trips.html">マイ予約</a>
       </nav>
       <div class="header__actions">
+        <div class="lang-toggle">
+          <button class="lang-btn active" onclick="setLang('ja',this)">JP</button>
+          <button class="lang-btn" onclick="setLang('en',this)">EN</button>
+        </div>
         <a href="login.html" class="btn btn--outline btn--sm">ログイン</a>
         <a href="login.html" class="btn btn--accent btn--sm">無料会員登録</a>
         <button class="hamburger" onclick="document.getElementById('mm').classList.add('open')" aria-label="メニュー">
@@ -436,6 +440,15 @@
 
   </div>
 
+  <!-- Mobile sticky booking bar -->
+  <div class="booking-sticky-bar" id="bookingBar" role="complementary" aria-label="予約バー">
+    <div class="booking-sticky-bar__left">
+      <div class="booking-sticky-bar__price">¥18,900<span>/ 泊</span></div>
+      <div class="booking-sticky-bar__save">Airbnb より ▼¥3,300 お得</div>
+    </div>
+    <a href="#" class="btn btn--accent btn--md">予約する</a>
+  </div>
+
   </main><!-- /main -->
 
   <!-- Footer -->
@@ -479,6 +492,12 @@
         s.style.color = i < value ? 'var(--star)' : 'var(--gray-2)';
       });
     }
+    function setLang(lang, btn) {
+      document.querySelectorAll('.lang-btn').forEach(function(b){ b.classList.remove('active'); });
+      btn.classList.add('active');
+      document.documentElement.lang = lang;
+    }
+    if(window.innerWidth <= 900) document.body.classList.add('has-booking-bar');
   </script>
 </body>
 </html>

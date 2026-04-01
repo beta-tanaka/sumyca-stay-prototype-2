@@ -31,6 +31,10 @@
         <a href="my-trips.html" class="active">マイ予約</a>
       </nav>
       <div class="header__actions">
+        <div class="lang-toggle">
+          <button class="lang-btn active" onclick="setLang('ja',this)">JP</button>
+          <button class="lang-btn" onclick="setLang('en',this)">EN</button>
+        </div>
         <a href="login.html" class="btn btn--outline btn--sm" id="hdr-login">ログイン</a>
         <a href="login.html" class="btn btn--accent btn--sm" id="hdr-signup">無料会員登録</a>
         <button class="hamburger" onclick="document.getElementById('mm').classList.add('open')" aria-label="メニュー">
@@ -213,6 +217,11 @@
   </footer>
 
   <script>
+    function setLang(lang, btn) {
+      document.querySelectorAll('.lang-btn').forEach(function(b){ b.classList.remove('active'); });
+      btn.classList.add('active');
+      document.documentElement.lang = lang;
+    }
     // Show logged-in state on demo button click or when arriving from login
     function showLoggedIn() {
       document.getElementById('trips-gate').classList.add('hidden');

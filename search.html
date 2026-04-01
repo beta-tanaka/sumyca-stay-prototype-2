@@ -127,6 +127,10 @@
         <a href="my-trips.html">マイ予約</a>
       </nav>
       <div class="header__actions">
+        <div class="lang-toggle">
+          <button class="lang-btn active" onclick="setLang('ja',this)">JP</button>
+          <button class="lang-btn" onclick="setLang('en',this)">EN</button>
+        </div>
         <a href="login.html" class="btn btn--outline btn--sm">ログイン</a>
         <a href="login.html" class="btn btn--accent btn--sm">無料会員登録</a>
         <button class="hamburger" onclick="document.getElementById('mm').classList.add('open')" aria-label="メニュー">
@@ -191,8 +195,16 @@
   <!-- Search layout -->
   <div class="search-layout">
 
+    <div class="filter-drawer-overlay" id="filterOverlay" onclick="closeFilter()"></div>
+
     <!-- Filters -->
-    <aside class="filters-panel">
+    <aside class="filters-panel" id="filtersPanel">
+      <div class="filter-drawer-handle"></div>
+      <div class="filter-drawer-header">
+        <h3>絞り込み</h3>
+        <button onclick="closeFilter()" aria-label="閉じる">✕</button>
+      </div>
+      <div class="filter-drawer-body">
       <div class="filters-panel__title">絞り込み</div>
 
       <div class="filter-group">
@@ -230,8 +242,10 @@
         <label class="filter-opt"><input type="checkbox"> <span>駐車場</span></label>
         <label class="filter-opt"><input type="checkbox"> <span>禁煙</span></label>
       </div>
-
-      <button class="btn btn--black btn--md btn--block" style="margin-top:8px;">この条件で検索</button>
+      </div><!-- /filter-drawer-body -->
+      <div class="filter-drawer-footer">
+        <button class="btn btn--accent btn--lg btn--block" onclick="closeFilter()">この条件で検索</button>
+      </div>
     </aside>
 
     <!-- Results -->
@@ -408,6 +422,12 @@
     </div>
   </div>
 
+  <!-- Mobile filter FAB -->
+  <button class="filter-fab" onclick="openFilter()" aria-label="絞り込みフィルターを開く">
+    <svg width="16" height="16" viewBox="0 0 20 20" fill="currentColor"><path fill-rule="evenodd" d="M3 3a1 1 0 011-1h12a1 1 0 011 1v3a1 1 0 01-.293.707L13 10.414V17a1 1 0 01-.553.894l-4 2A1 1 0 017 19v-8.586L3.293 6.707A1 1 0 013 6V3z" clip-rule="evenodd"/></svg>
+    絞り込み
+  </button>
+
   </main><!-- /main -->
 
   <!-- Footer -->
@@ -444,5 +464,22 @@
     </div>
   </footer>
 
+  <script>
+    function setLang(lang, btn) {
+      document.querySelectorAll('.lang-btn').forEach(function(b){ b.classList.remove('active'); });
+      btn.classList.add('active');
+      document.documentElement.lang = lang;
+    }
+    function openFilter(){
+      document.getElementById('filtersPanel').classList.add('open');
+      document.getElementById('filterOverlay').classList.add('open');
+      document.body.style.overflow='hidden';
+    }
+    function closeFilter(){
+      document.getElementById('filtersPanel').classList.remove('open');
+      document.getElementById('filterOverlay').classList.remove('open');
+      document.body.style.overflow='';
+    }
+  </script>
 </body>
 </html>
