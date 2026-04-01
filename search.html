@@ -1,0 +1,446 @@
+<!DOCTYPE html>
+<html lang="ja" prefix="og: https://ogp.me/ns#">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+  <!-- SEO: Core meta -->
+  <title>東京・大阪・京都の民泊を直接予約 | 物件一覧 — sumyca stay</title>
+  <meta name="description" content="sumyca stay の民泊・短期滞在物件一覧。東京・大阪・京都・福岡・沖縄など全国241件以上。OTAより15%安い直接予約、当日キャンセル無料、24時間PINチェックイン対応。">
+  <meta name="robots" content="index, follow">
+  <link rel="canonical" href="https://beta-tanaka.github.io/sumyca-stay-prototype-1/search.html">
+
+  <!-- SEO: Open Graph -->
+  <meta property="og:type" content="website">
+  <meta property="og:site_name" content="sumyca stay">
+  <meta property="og:title" content="民泊物件を探す | sumyca stay — OTAより15%安い直接予約">
+  <meta property="og:description" content="全国の民泊・短期滞在施設を直接予約。エリア・日程・人数で絞り込み可能。当日キャンセル無料。">
+  <meta property="og:url" content="https://beta-tanaka.github.io/sumyca-stay-prototype-1/search.html">
+  <meta property="og:image" content="https://images.unsplash.com/photo-1522708323590-d24dbb6b0267?w=1200&h=630&fit=crop">
+
+  <!-- AIO: JSON-LD -->
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@graph": [
+      {
+        "@type": "BreadcrumbList",
+        "itemListElement": [
+          { "@type": "ListItem", "position": 1, "name": "ホーム", "item": "https://beta-tanaka.github.io/sumyca-stay-prototype-1/" },
+          { "@type": "ListItem", "position": 2, "name": "物件を探す", "item": "https://beta-tanaka.github.io/sumyca-stay-prototype-1/search.html" }
+        ]
+      },
+      {
+        "@type": "ItemList",
+        "name": "sumyca stay 民泊物件一覧（東京）",
+        "description": "東京の民泊・短期滞在物件。直接予約でOTAより15%安く宿泊できます。",
+        "numberOfItems": 5,
+        "itemListElement": [
+          {
+            "@type": "ListItem",
+            "position": 1,
+            "item": {
+              "@type": "LodgingBusiness",
+              "name": "デザイナーズ 1LDK 原宿",
+              "url": "https://beta-tanaka.github.io/sumyca-stay-prototype-1/property-detail.html",
+              "image": "https://images.unsplash.com/photo-1540959733332-eab4deabeeaf?w=520&h=360&fit=crop",
+              "address": { "@type": "PostalAddress", "addressLocality": "渋谷区", "addressRegion": "東京都", "addressCountry": "JP" },
+              "aggregateRating": { "@type": "AggregateRating", "ratingValue": "4.89", "reviewCount": "48" },
+              "offers": { "@type": "Offer", "price": "18900", "priceCurrency": "JPY", "priceSpecification": { "@type": "UnitPriceSpecification", "price": "18900", "priceCurrency": "JPY", "referenceQuantity": { "@type": "QuantitativeValue", "value": "1", "unitText": "泊" } } }
+            }
+          },
+          {
+            "@type": "ListItem",
+            "position": 2,
+            "item": {
+              "@type": "LodgingBusiness",
+              "name": "ヴィンテージ スタジオ 渋谷",
+              "url": "https://beta-tanaka.github.io/sumyca-stay-prototype-1/property-detail.html",
+              "address": { "@type": "PostalAddress", "addressLocality": "渋谷区", "addressRegion": "東京都", "addressCountry": "JP" },
+              "aggregateRating": { "@type": "AggregateRating", "ratingValue": "4.72", "reviewCount": "33" },
+              "offers": { "@type": "Offer", "price": "13260", "priceCurrency": "JPY" }
+            }
+          },
+          {
+            "@type": "ListItem",
+            "position": 3,
+            "item": {
+              "@type": "LodgingBusiness",
+              "name": "モダン 2K 新宿ガーデン",
+              "url": "https://beta-tanaka.github.io/sumyca-stay-prototype-1/property-detail.html",
+              "address": { "@type": "PostalAddress", "addressLocality": "新宿区", "addressRegion": "東京都", "addressCountry": "JP" },
+              "aggregateRating": { "@type": "AggregateRating", "ratingValue": "4.81", "reviewCount": "57" },
+              "offers": { "@type": "Offer", "price": "16490", "priceCurrency": "JPY" }
+            }
+          }
+        ]
+      }
+    ]
+  }
+  </script>
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="css/style.css">
+  <style>
+    .search-topbar {
+      background: var(--white);
+      border-bottom: 1px solid var(--gray-2);
+      padding: 16px 24px;
+    }
+    .search-topbar__inner {
+      max-width: 1100px; margin: 0 auto;
+      display: flex; align-items: center; gap: 16px; flex-wrap: wrap;
+    }
+    .search-topbar__field {
+      display: flex; align-items: center; gap: 8px;
+      border: 2px solid var(--gray-2);
+      border-radius: var(--r-sm);
+      padding: 8px 14px;
+      font-size: 0.875rem;
+      cursor: pointer;
+      transition: border-color 0.15s;
+    }
+    .search-topbar__field:hover { border-color: var(--dark); }
+    .search-topbar__field-label { font-size: 0.7rem; font-weight: 700; color: var(--gray-3); display: block; text-transform: uppercase; letter-spacing: 0.04em; }
+    .search-topbar__field-val { font-weight: 600; }
+    .search-topbar__sep { width: 1px; height: 32px; background: var(--gray-2); flex-shrink: 0; }
+    @media (max-width: 640px) { .search-topbar__sep { display: none; } }
+  </style>
+</head>
+<body>
+
+  <!-- Member bar -->
+  <div class="member-bar">
+    <span>会員登録で常時 15% オフ・当日キャンセル無料</span>
+    <a href="login.html" class="member-bar__login">ログイン</a>
+    <a href="login.html" class="member-bar__signup">無料会員登録</a>
+  </div>
+
+  <!-- Header -->
+  <header class="header">
+    <div class="header__inner">
+      <a href="index.html" class="header__logo">sumyca <span>stay</span></a>
+      <nav class="header__nav">
+        <a href="search.html" class="active">物件を探す</a>
+        <a href="my-trips.html">マイ予約</a>
+      </nav>
+      <div class="header__actions">
+        <a href="login.html" class="btn btn--outline btn--sm">ログイン</a>
+        <a href="login.html" class="btn btn--accent btn--sm">無料会員登録</a>
+        <button class="hamburger" onclick="document.getElementById('mm').classList.add('open')" aria-label="メニュー">
+          <span></span><span></span><span></span>
+        </button>
+      </div>
+    </div>
+  </header>
+
+  <div class="mobile-menu" id="mm">
+    <button class="mobile-menu__close" onclick="document.getElementById('mm').classList.remove('open')">✕</button>
+    <div class="mobile-menu__logo">sumyca <span>stay</span></div>
+    <nav class="mobile-menu__nav">
+      <a href="search.html">物件を探す</a>
+      <a href="my-trips.html">マイ予約</a>
+    </nav>
+    <div class="mobile-menu__actions">
+      <a href="login.html" class="btn btn--teal btn--lg btn--block">ログイン</a>
+      <a href="login.html" class="btn btn--accent btn--lg btn--block">無料会員登録</a>
+    </div>
+  </div>
+
+  <main id="main-content">
+
+  <!-- Search topbar -->
+  <div class="search-topbar" role="search" aria-label="物件検索">
+    <div class="search-topbar__inner">
+      <div class="search-topbar__field">
+        <div>
+          <span class="search-topbar__field-label">エリア</span>
+          <span class="search-topbar__field-val">すべてのエリア</span>
+        </div>
+      </div>
+      <div class="search-topbar__sep"></div>
+      <div class="search-topbar__field">
+        <div>
+          <span class="search-topbar__field-label">チェックイン</span>
+          <span class="search-topbar__field-val">日程を選択</span>
+        </div>
+      </div>
+      <div class="search-topbar__field">
+        <div>
+          <span class="search-topbar__field-label">チェックアウト</span>
+          <span class="search-topbar__field-val">日程を選択</span>
+        </div>
+      </div>
+      <div class="search-topbar__sep"></div>
+      <div class="search-topbar__field">
+        <div>
+          <span class="search-topbar__field-label">人数</span>
+          <span class="search-topbar__field-val">1名</span>
+        </div>
+      </div>
+      <button class="btn btn--accent btn--sm" style="margin-left:auto;">
+        <svg width="14" height="14" viewBox="0 0 20 20" fill="currentColor"><path fill-rule="evenodd" d="M8 4a4 4 0 100 8 4 4 0 000-8zM2 8a6 6 0 1110.89 3.476l4.817 4.817a1 1 0 01-1.414 1.414l-4.816-4.816A6 6 0 012 8z" clip-rule="evenodd"/></svg>
+        検索
+      </button>
+    </div>
+  </div>
+
+  <!-- Search layout -->
+  <div class="search-layout">
+
+    <!-- Filters -->
+    <aside class="filters-panel">
+      <div class="filters-panel__title">絞り込み</div>
+
+      <div class="filter-group">
+        <div class="filter-group__label">エリア</div>
+        <label class="filter-opt"><input type="checkbox" checked> <span>東京</span></label>
+        <label class="filter-opt"><input type="checkbox"> <span>大阪</span></label>
+        <label class="filter-opt"><input type="checkbox"> <span>京都</span></label>
+        <label class="filter-opt"><input type="checkbox"> <span>福岡</span></label>
+        <label class="filter-opt"><input type="checkbox"> <span>沖縄</span></label>
+        <label class="filter-opt"><input type="checkbox"> <span>北海道</span></label>
+      </div>
+
+      <div class="filter-group">
+        <div class="filter-group__label">1泊あたりの料金</div>
+        <div class="filter-price">
+          <input type="number" placeholder="¥ 最低" min="0" step="1000">
+          <span>〜</span>
+          <input type="number" placeholder="¥ 最高" min="0" step="1000">
+        </div>
+      </div>
+
+      <div class="filter-group">
+        <div class="filter-group__label">人数</div>
+        <label class="filter-opt"><input type="radio" name="guests" checked> <span>1名</span></label>
+        <label class="filter-opt"><input type="radio" name="guests"> <span>2名</span></label>
+        <label class="filter-opt"><input type="radio" name="guests"> <span>3〜4名</span></label>
+        <label class="filter-opt"><input type="radio" name="guests"> <span>5名以上</span></label>
+      </div>
+
+      <div class="filter-group">
+        <div class="filter-group__label">設備・アメニティ</div>
+        <label class="filter-opt"><input type="checkbox"> <span>Wi-Fi</span></label>
+        <label class="filter-opt"><input type="checkbox"> <span>キッチン</span></label>
+        <label class="filter-opt"><input type="checkbox"> <span>洗濯機</span></label>
+        <label class="filter-opt"><input type="checkbox"> <span>駐車場</span></label>
+        <label class="filter-opt"><input type="checkbox"> <span>禁煙</span></label>
+      </div>
+
+      <button class="btn btn--black btn--md btn--block" style="margin-top:8px;">この条件で検索</button>
+    </aside>
+
+    <!-- Results -->
+    <div>
+      <div class="results-header">
+        <div>
+          <h1>東京の物件</h1>
+          <p>241 件見つかりました</p>
+        </div>
+        <select class="sort-select">
+          <option>おすすめ順</option>
+          <option>料金が安い順</option>
+          <option>評価が高い順</option>
+          <option>新着順</option>
+        </select>
+      </div>
+
+      <div class="results-grid">
+
+        <!-- Card 1 -->
+        <a href="property-detail.html" class="result-card">
+          <div class="result-card__img">
+            <img src="https://images.unsplash.com/photo-1540959733332-eab4deabeeaf?w=520&h=360&fit=crop" alt="原宿">
+            <div class="ota-badge" style="top:10px;left:10px;">公式 <span class="ota-badge__save">▼15%</span></div>
+          </div>
+          <div class="result-card__body">
+            <div class="result-card__location">東京 · 原宿 · 表参道駅 徒歩 3 分</div>
+            <div class="result-card__title">デザイナーズ 1LDK 原宿</div>
+            <div class="result-card__tags">
+              <span class="result-card__tag">1〜2名</span>
+              <span class="result-card__tag">Wi-Fi</span>
+              <span class="result-card__tag">洗濯機</span>
+              <span class="result-card__tag">禁煙</span>
+            </div>
+            <div class="result-card__rating"><span style="color:var(--star);">★</span> <strong>4.89</strong> <span style="color:var(--gray-3);">(48件)</span></div>
+            <div class="result-card__cancel">✓ 前日 24 時まで無料キャンセル</div>
+          </div>
+          <div class="result-card__aside">
+            <div>
+              <div class="result-card__ota">¥22,200</div>
+              <div class="result-card__save">▼ ¥3,300 お得</div>
+              <div class="result-card__price">
+                <div class="result-card__price-num">¥18,900</div>
+                <div class="result-card__price-unit">/泊（税込）</div>
+              </div>
+            </div>
+            <span class="btn btn--accent btn--sm">選ぶ</span>
+          </div>
+        </a>
+
+        <!-- Card 2 -->
+        <a href="property-detail.html" class="result-card">
+          <div class="result-card__img">
+            <img src="https://images.unsplash.com/photo-1522708323590-d24dbb6b0267?w=520&h=360&fit=crop" alt="渋谷">
+            <div class="ota-badge" style="top:10px;left:10px;">公式 <span class="ota-badge__save">▼15%</span></div>
+          </div>
+          <div class="result-card__body">
+            <div class="result-card__location">東京 · 渋谷 · 渋谷駅 徒歩 5 分</div>
+            <div class="result-card__title">ヴィンテージ スタジオ 渋谷</div>
+            <div class="result-card__tags">
+              <span class="result-card__tag">1名</span>
+              <span class="result-card__tag">Wi-Fi</span>
+              <span class="result-card__tag">デスク</span>
+            </div>
+            <div class="result-card__rating"><span style="color:var(--star);">★</span> <strong>4.72</strong> <span style="color:var(--gray-3);">(33件)</span></div>
+            <div class="result-card__cancel">✓ 前日 24 時まで無料キャンセル</div>
+          </div>
+          <div class="result-card__aside">
+            <div>
+              <div class="result-card__ota">¥15,600</div>
+              <div class="result-card__save">▼ ¥2,340 お得</div>
+              <div class="result-card__price">
+                <div class="result-card__price-num">¥13,260</div>
+                <div class="result-card__price-unit">/泊（税込）</div>
+              </div>
+            </div>
+            <span class="btn btn--accent btn--sm">選ぶ</span>
+          </div>
+        </a>
+
+        <!-- Card 3 -->
+        <a href="property-detail.html" class="result-card">
+          <div class="result-card__img">
+            <img src="https://images.unsplash.com/photo-1560448204-e02f11c3d0e2?w=520&h=360&fit=crop" alt="新宿">
+            <div class="ota-badge" style="top:10px;left:10px;">公式 <span class="ota-badge__save">▼15%</span></div>
+          </div>
+          <div class="result-card__body">
+            <div class="result-card__location">東京 · 新宿 · 新宿三丁目駅 徒歩 2 分</div>
+            <div class="result-card__title">モダン 2K 新宿ガーデン</div>
+            <div class="result-card__tags">
+              <span class="result-card__tag">1〜3名</span>
+              <span class="result-card__tag">キッチン</span>
+              <span class="result-card__tag">Wi-Fi</span>
+              <span class="result-card__tag">洗濯機</span>
+            </div>
+            <div class="result-card__rating"><span style="color:var(--star);">★</span> <strong>4.81</strong> <span style="color:var(--gray-3);">(57件)</span></div>
+            <div class="result-card__cancel">✓ 前日 24 時まで無料キャンセル</div>
+          </div>
+          <div class="result-card__aside">
+            <div>
+              <div class="result-card__ota">¥19,400</div>
+              <div class="result-card__save">▼ ¥2,910 お得</div>
+              <div class="result-card__price">
+                <div class="result-card__price-num">¥16,490</div>
+                <div class="result-card__price-unit">/泊（税込）</div>
+              </div>
+            </div>
+            <span class="btn btn--accent btn--sm">選ぶ</span>
+          </div>
+        </a>
+
+        <!-- Card 4 -->
+        <a href="property-detail.html" class="result-card">
+          <div class="result-card__img">
+            <img src="https://images.unsplash.com/photo-1502672260266-1c1ef2d93688?w=520&h=360&fit=crop" alt="恵比寿">
+            <div class="ota-badge" style="top:10px;left:10px;">公式 <span class="ota-badge__save">▼15%</span></div>
+          </div>
+          <div class="result-card__body">
+            <div class="result-card__location">東京 · 恵比寿 · 恵比寿駅 徒歩 6 分</div>
+            <div class="result-card__title">ラグジュアリー 1LDK 恵比寿</div>
+            <div class="result-card__tags">
+              <span class="result-card__tag">1〜2名</span>
+              <span class="result-card__tag">Wi-Fi</span>
+              <span class="result-card__tag">バスタブ</span>
+              <span class="result-card__tag">禁煙</span>
+            </div>
+            <div class="result-card__rating"><span style="color:var(--star);">★</span> <strong>4.93</strong> <span style="color:var(--gray-3);">(19件)</span></div>
+            <div class="result-card__cancel">✓ 前日 24 時まで無料キャンセル</div>
+          </div>
+          <div class="result-card__aside">
+            <div>
+              <div class="result-card__ota">¥32,000</div>
+              <div class="result-card__save">▼ ¥4,800 お得</div>
+              <div class="result-card__price">
+                <div class="result-card__price-num">¥27,200</div>
+                <div class="result-card__price-unit">/泊（税込）</div>
+              </div>
+            </div>
+            <span class="btn btn--accent btn--sm">選ぶ</span>
+          </div>
+        </a>
+
+        <!-- Card 5 -->
+        <a href="property-detail.html" class="result-card">
+          <div class="result-card__img">
+            <img src="https://images.unsplash.com/photo-1631049307264-da0ec9d70304?w=520&h=360&fit=crop" alt="浅草">
+            <div class="ota-badge" style="top:10px;left:10px;">公式 <span class="ota-badge__save">▼15%</span></div>
+          </div>
+          <div class="result-card__body">
+            <div class="result-card__location">東京 · 浅草 · 浅草駅 徒歩 4 分</div>
+            <div class="result-card__title">和風モダン スタジオ 浅草</div>
+            <div class="result-card__tags">
+              <span class="result-card__tag">1〜2名</span>
+              <span class="result-card__tag">Wi-Fi</span>
+              <span class="result-card__tag">観光拠点</span>
+            </div>
+            <div class="result-card__rating"><span style="color:var(--star);">★</span> <strong>4.85</strong> <span style="color:var(--gray-3);">(74件)</span></div>
+            <div class="result-card__cancel">✓ 前日 24 時まで無料キャンセル</div>
+          </div>
+          <div class="result-card__aside">
+            <div>
+              <div class="result-card__ota">¥16,800</div>
+              <div class="result-card__save">▼ ¥2,520 お得</div>
+              <div class="result-card__price">
+                <div class="result-card__price-num">¥14,280</div>
+                <div class="result-card__price-unit">/泊（税込）</div>
+              </div>
+            </div>
+            <span class="btn btn--accent btn--sm">選ぶ</span>
+          </div>
+        </a>
+
+      </div>
+    </div>
+  </div>
+
+  </main><!-- /main -->
+
+  <!-- Footer -->
+  <footer class="footer" aria-label="サイトフッター">
+    <div class="footer__inner">
+      <div>
+        <div class="footer__brand">sumyca <span>stay</span></div>
+        <p class="footer__desc">全国の民泊・短期滞在施設を、直接予約で最安値保証。フロントなし、PIN セルフ入室。</p>
+      </div>
+      <div class="footer__col">
+        <h4>エリア</h4>
+        <a href="#">東京</a>
+        <a href="#">大阪</a>
+        <a href="#">京都</a>
+        <a href="#">福岡</a>
+        <a href="#">沖縄</a>
+      </div>
+      <div class="footer__col">
+        <h4>サポート</h4>
+        <a href="#">よくある質問</a>
+        <a href="#">キャンセルポリシー</a>
+        <a href="#">利用規約</a>
+        <a href="#">プライバシーポリシー</a>
+      </div>
+    </div>
+    <div class="footer__bottom">
+      <span class="footer__copy">© 2026 sumyca stay. All rights reserved.</span>
+      <div class="payment-icons">
+        <span class="payment-icon">VISA</span>
+        <span class="payment-icon">MC</span>
+        <span class="payment-icon">AMEX</span>
+        <span class="payment-icon">PayPay</span>
+      </div>
+    </div>
+  </footer>
+
+</body>
+</html>

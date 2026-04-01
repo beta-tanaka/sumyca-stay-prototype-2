@@ -1,0 +1,242 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+  <title>マイ予約 | sumyca stay</title>
+  <meta name="description" content="sumyca stay マイ予約 — 予約履歴・滞在中・過去の滞在を確認できます。">
+  <meta name="robots" content="noindex, nofollow">
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+
+  <!-- Member bar -->
+  <div class="member-bar">
+    <span>会員登録で常時 15% オフ・当日キャンセル無料</span>
+    <a href="login.html" class="member-bar__login" id="mb-login">ログイン</a>
+    <a href="login.html" class="member-bar__signup" id="mb-signup">無料会員登録</a>
+  </div>
+
+  <!-- Header -->
+  <header class="header">
+    <div class="header__inner">
+      <a href="index.html" class="header__logo">sumyca <span>stay</span></a>
+      <nav class="header__nav">
+        <a href="search.html">物件を探す</a>
+        <a href="my-trips.html" class="active">マイ予約</a>
+      </nav>
+      <div class="header__actions">
+        <a href="login.html" class="btn btn--outline btn--sm" id="hdr-login">ログイン</a>
+        <a href="login.html" class="btn btn--accent btn--sm" id="hdr-signup">無料会員登録</a>
+        <button class="hamburger" onclick="document.getElementById('mm').classList.add('open')" aria-label="メニュー">
+          <span></span><span></span><span></span>
+        </button>
+      </div>
+    </div>
+  </header>
+
+  <div class="mobile-menu" id="mm">
+    <button class="mobile-menu__close" onclick="document.getElementById('mm').classList.remove('open')">✕</button>
+    <div class="mobile-menu__logo">sumyca <span>stay</span></div>
+    <nav class="mobile-menu__nav">
+      <a href="search.html">物件を探す</a>
+      <a href="my-trips.html">マイ予約</a>
+    </nav>
+    <div class="mobile-menu__actions">
+      <a href="login.html" class="btn btn--teal btn--lg btn--block">ログイン</a>
+      <a href="login.html" class="btn btn--accent btn--lg btn--block">無料会員登録</a>
+    </div>
+  </div>
+
+  <main id="main-content">
+    <div class="trips-page">
+
+      <!-- Login gate (default state) -->
+      <div class="trips-gate" id="trips-gate">
+        <div class="trips-gate__card">
+          <div class="trips-gate__icon">🧳</div>
+          <h1 class="trips-gate__title">マイ予約</h1>
+          <p class="trips-gate__desc">ログインして予約履歴を確認しましょう。今後の予約・滞在中・過去の滞在をまとめて管理できます。</p>
+          <div class="trips-gate__actions">
+            <button class="btn btn--teal btn--lg btn--block" onclick="showLoggedIn()">ログインして確認する</button>
+            <a href="login.html" class="btn btn--outline btn--md btn--block">新規会員登録（無料）</a>
+          </div>
+        </div>
+      </div>
+
+      <!-- Logged-in state (hidden until JS toggle) -->
+      <div class="trips-logged-in" id="trips-logged-in">
+
+        <!-- Header -->
+        <div class="trips-header">
+          <div>
+            <h1 class="trips-header__greeting">田中 <span>太郎</span>さん、おかえりなさい</h1>
+            <p style="font-size:0.875rem;color:var(--gray-3);margin-top:4px;">会員ランク: シルバー ·  通算 7 泊</p>
+          </div>
+          <a href="search.html" class="btn btn--accent btn--md">新しい旅を予約する →</a>
+        </div>
+
+        <!-- Tab bar -->
+        <div class="trips-tabs" role="tablist">
+          <button class="trips-tab active" onclick="filterTrips('all', this)">すべて</button>
+          <button class="trips-tab" onclick="filterTrips('upcoming', this)">今後の予約</button>
+          <button class="trips-tab" onclick="filterTrips('current', this)">滞在中</button>
+          <button class="trips-tab" onclick="filterTrips('past', this)">過去の予約</button>
+        </div>
+
+        <!-- Trip cards -->
+        <div class="trip-cards" id="trip-cards-container">
+
+          <!-- 1. Upcoming -->
+          <article class="trip-card" data-status="upcoming">
+            <div class="trip-card__img">
+              <img src="https://images.unsplash.com/photo-1540959733332-eab4deabeeaf?w=500&h=400&fit=crop" alt="デザイナーズ 1LDK 原宿" loading="lazy">
+            </div>
+            <div class="trip-card__body">
+              <span class="trip-card__status trip-card__status--upcoming">今後の予約</span>
+              <h2 class="trip-card__title">デザイナーズ 1LDK 原宿</h2>
+              <p class="trip-card__dates">📅 4月15日（火）〜 4月18日（金）· 3泊</p>
+              <p style="font-size:0.8125rem;color:var(--gray-4);">📍 東京都渋谷区神宮前 · 表参道駅 徒歩3分</p>
+              <p style="font-size:0.8125rem;color:var(--gray-4);margin-top:4px;">チェックイン 15:00 · PIN コードは前日 SMS で届きます</p>
+            </div>
+            <div class="trip-card__aside">
+              <div class="trip-card__price">
+                ¥42,840
+                <div class="trip-card__price-unit">3泊合計</div>
+              </div>
+              <div class="trip-card__actions">
+                <a href="property-detail.html" class="btn btn--outline btn--sm">詳細を見る</a>
+                <button class="btn btn--ghost btn--sm" style="color:var(--gray-3);font-size:0.75rem;" onclick="alert('キャンセルポリシー: チェックイン前日24時まで無料')">キャンセル</button>
+              </div>
+            </div>
+          </article>
+
+          <!-- 2. Current -->
+          <article class="trip-card" data-status="current">
+            <div class="trip-card__img">
+              <img src="https://images.unsplash.com/photo-1493976040374-85c8e12f0c0e?w=500&h=400&fit=crop" alt="ミニマル和モダン 難波" loading="lazy">
+            </div>
+            <div class="trip-card__body">
+              <span class="trip-card__status trip-card__status--current">滞在中</span>
+              <h2 class="trip-card__title">ミニマル和モダン 難波</h2>
+              <p class="trip-card__dates">📅 4月1日（火）〜 4月3日（木）· 2泊</p>
+              <p style="font-size:0.8125rem;color:var(--gray-4);">📍 大阪府中央区難波 · なんば駅 徒歩3分</p>
+              <p style="font-size:0.8125rem;color:#C05621;margin-top:6px;font-weight:700;">チェックアウト: 4月3日 11:00</p>
+            </div>
+            <div class="trip-card__aside">
+              <div class="trip-card__price">
+                ¥28,560
+                <div class="trip-card__price-unit">2泊合計</div>
+              </div>
+              <div class="trip-card__actions">
+                <a href="property-detail.html" class="btn btn--teal btn--sm">物件を見る</a>
+                <button class="btn btn--ghost btn--sm" style="color:var(--gray-3);font-size:0.75rem;" onclick="alert('サポートに連絡します')">サポート</button>
+              </div>
+            </div>
+          </article>
+
+          <!-- 3. Past -->
+          <article class="trip-card" data-status="past">
+            <div class="trip-card__img">
+              <img src="https://images.unsplash.com/photo-1528360983277-13d401cdc186?w=500&h=400&fit=crop" alt="築100年古民家リノベ 東山" loading="lazy">
+            </div>
+            <div class="trip-card__body">
+              <span class="trip-card__status trip-card__status--past">滞在済み</span>
+              <h2 class="trip-card__title">築 100 年古民家リノベ 東山</h2>
+              <p class="trip-card__dates">📅 3月10日（月）〜 3月13日（木）· 3泊</p>
+              <p style="font-size:0.8125rem;color:var(--gray-4);">📍 京都府東山区 · 祇園四条駅 徒歩10分</p>
+              <p style="font-size:0.8125rem;color:var(--gray-3);margin-top:4px;">評価をまだ投稿していません</p>
+            </div>
+            <div class="trip-card__aside">
+              <div class="trip-card__price">
+                ¥64,800
+                <div class="trip-card__price-unit">3泊合計</div>
+              </div>
+              <div class="trip-card__actions">
+                <a href="property-detail.html#review-form" class="btn btn--accent btn--sm">レビューを書く</a>
+                <a href="property-detail.html" class="btn btn--outline btn--sm">詳細を見る</a>
+              </div>
+            </div>
+          </article>
+
+        </div>
+
+        <!-- CTA -->
+        <div class="trips-cta">
+          <a href="search.html" class="btn btn--accent btn--lg">新しい旅を予約する →</a>
+        </div>
+
+      </div>
+      <!-- /trips-logged-in -->
+
+    </div>
+  </main>
+
+  <!-- Footer -->
+  <footer class="footer" aria-label="サイトフッター">
+    <div class="footer__inner">
+      <div>
+        <div class="footer__brand">sumyca <span>stay</span></div>
+        <p class="footer__desc">全国の民泊・短期滞在施設を、直接予約で最安値保証。フロントなし、PIN セルフ入室。</p>
+      </div>
+      <div class="footer__col">
+        <h4>物件を探す</h4>
+        <a href="search.html">東京</a>
+        <a href="search.html">大阪</a>
+        <a href="search.html">京都</a>
+        <a href="search.html">福岡</a>
+        <a href="search.html">沖縄</a>
+      </div>
+      <div class="footer__col">
+        <h4>サポート</h4>
+        <a href="#">よくある質問</a>
+        <a href="#">キャンセルポリシー</a>
+        <a href="#">利用規約</a>
+        <a href="#">プライバシーポリシー</a>
+      </div>
+    </div>
+    <div class="footer__bottom">
+      <span class="footer__copy">© 2026 sumyca stay. All rights reserved.</span>
+      <div class="payment-icons">
+        <span class="payment-icon">VISA</span>
+        <span class="payment-icon">MC</span>
+        <span class="payment-icon">AMEX</span>
+        <span class="payment-icon">PayPay</span>
+      </div>
+    </div>
+  </footer>
+
+  <script>
+    // Show logged-in state on demo button click or when arriving from login
+    function showLoggedIn() {
+      document.getElementById('trips-gate').classList.add('hidden');
+      document.getElementById('trips-logged-in').classList.add('visible');
+    }
+
+    // Auto-show if redirected from login demo
+    if (new URLSearchParams(window.location.search).get('demo') === '1') {
+      showLoggedIn();
+    }
+
+    // Tab filter
+    function filterTrips(status, btn) {
+      // Update active tab
+      document.querySelectorAll('.trips-tab').forEach(t => t.classList.remove('active'));
+      btn.classList.add('active');
+
+      // Filter cards
+      document.querySelectorAll('.trip-card').forEach(card => {
+        if (status === 'all' || card.dataset.status === status) {
+          card.style.display = 'grid';
+        } else {
+          card.style.display = 'none';
+        }
+      });
+    }
+  </script>
+</body>
+</html>
