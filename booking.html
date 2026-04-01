@@ -1,0 +1,555 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>予約手続き — デザイナーズ 1LDK 原宿 | sumyca stay</title>
+  <meta name="robots" content="noindex, nofollow">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="css/style.css">
+  <style>
+    body { background: var(--gray-1); }
+
+    /* ---- Steps ---- */
+    .booking-steps {
+      display: flex;
+      align-items: center;
+      gap: 0;
+      padding: 20px 0;
+      max-width: 480px;
+      margin: 0 auto;
+    }
+    .bstep {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 4px;
+      flex: 1;
+      position: relative;
+    }
+    .bstep::after {
+      content: '';
+      position: absolute;
+      top: 14px;
+      left: calc(50% + 14px);
+      right: calc(-50% + 14px);
+      height: 2px;
+      background: var(--gray-2);
+    }
+    .bstep:last-child::after { display: none; }
+    .bstep__num {
+      width: 28px; height: 28px;
+      border-radius: 50%;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 0.75rem;
+      font-weight: 800;
+      background: var(--gray-2);
+      color: var(--gray-3);
+      position: relative;
+      z-index: 1;
+    }
+    .bstep--done .bstep__num { background: var(--teal); color: var(--white); }
+    .bstep--done::after { background: var(--teal); }
+    .bstep--active .bstep__num { background: var(--dark); color: var(--white); }
+    .bstep__label { font-size: 0.68rem; font-weight: 600; color: var(--gray-3); text-align: center; }
+    .bstep--active .bstep__label { color: var(--dark); font-weight: 800; }
+    .bstep--done .bstep__label { color: var(--teal); }
+
+    /* ---- Layout ---- */
+    .booking-wrap {
+      max-width: 1020px;
+      margin: 0 auto;
+      padding: 0 20px 80px;
+      display: grid;
+      grid-template-columns: 1fr 360px;
+      gap: 32px;
+      align-items: start;
+    }
+    @media (max-width: 860px) {
+      .booking-wrap { grid-template-columns: 1fr; }
+      .booking-summary { order: -1; }
+    }
+
+    /* ---- Track selector ---- */
+    .track-selector {
+      background: var(--white);
+      border-radius: var(--r-lg);
+      padding: 24px;
+      margin-bottom: 20px;
+      border: 1px solid var(--gray-2);
+    }
+    .track-selector h2 { font-size: 1rem; font-weight: 800; margin-bottom: 16px; }
+    .track-options { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+    @media (max-width: 560px) { .track-options { grid-template-columns: 1fr; } }
+    .track-btn {
+      padding: 14px 16px;
+      border-radius: var(--r-md);
+      border: 2px solid var(--gray-2);
+      background: var(--white);
+      cursor: pointer;
+      text-align: left;
+      transition: border-color 0.15s, background 0.15s;
+      font-family: var(--font);
+    }
+    .track-btn__title { font-size: 0.9375rem; font-weight: 800; color: var(--dark); margin-bottom: 4px; }
+    .track-btn__desc { font-size: 0.78rem; color: var(--gray-3); line-height: 1.4; }
+    .track-btn.active {
+      border-color: var(--teal);
+      background: var(--teal-bg);
+    }
+    .track-btn.active .track-btn__title { color: var(--teal); }
+    .track-sep {
+      display: flex; align-items: center; gap: 12px;
+      font-size: 0.75rem; color: var(--gray-3); font-weight: 600;
+      margin: 4px 0;
+    }
+    .track-sep::before, .track-sep::after {
+      content: ''; flex: 1; height: 1px; background: var(--gray-2);
+    }
+
+    /* ---- Card (form section) ---- */
+    .bcard {
+      background: var(--white);
+      border-radius: var(--r-lg);
+      padding: 24px;
+      margin-bottom: 16px;
+      border: 1px solid var(--gray-2);
+    }
+    .bcard__title {
+      font-size: 1rem; font-weight: 800;
+      margin-bottom: 20px;
+      padding-bottom: 14px;
+      border-bottom: 1px solid var(--gray-2);
+      display: flex; align-items: center; gap: 8px;
+    }
+    .bcard__title-icon { font-size: 1.1rem; }
+
+    /* ---- Form fields ---- */
+    .field-row { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; margin-bottom: 14px; }
+    @media (max-width: 560px) { .field-row { grid-template-columns: 1fr; } }
+    .field-row--3 { grid-template-columns: 1fr 1fr 1fr; }
+    @media (max-width: 560px) { .field-row--3 { grid-template-columns: 1fr; } }
+    .field { margin-bottom: 14px; }
+    .field label {
+      display: block;
+      font-size: 0.78rem;
+      font-weight: 700;
+      color: var(--gray-4);
+      margin-bottom: 6px;
+      letter-spacing: 0.03em;
+    }
+    .field label .req { color: var(--amber); margin-left: 2px; }
+    .field input, .field select {
+      width: 100%;
+      padding: 11px 14px;
+      border: 1.5px solid var(--gray-2);
+      border-radius: var(--r-sm);
+      font-size: 0.9375rem;
+      font-family: var(--font);
+      color: var(--dark);
+      background: var(--white);
+      outline: none;
+      transition: border-color 0.15s;
+    }
+    .field input:focus, .field select:focus { border-color: var(--teal); }
+    .field input::placeholder { color: var(--gray-3); }
+    .field__hint { font-size: 0.72rem; color: var(--gray-3); margin-top: 4px; }
+
+    /* ---- Card number display ---- */
+    .card-icons { display: flex; gap: 6px; margin-bottom: 12px; }
+    .card-icon {
+      background: var(--gray-1);
+      border: 1px solid var(--gray-2);
+      border-radius: 4px;
+      padding: 3px 8px;
+      font-size: 0.7rem;
+      font-weight: 800;
+      color: var(--gray-4);
+    }
+
+    /* ---- Cancel policy ---- */
+    .policy-check {
+      display: flex;
+      gap: 12px;
+      align-items: flex-start;
+      padding: 16px;
+      background: var(--gray-1);
+      border-radius: var(--r-md);
+      border: 1px solid var(--gray-2);
+      margin-top: 4px;
+    }
+    .policy-check input[type=checkbox] { width: 18px; height: 18px; accent-color: var(--teal); flex-shrink: 0; margin-top: 2px; }
+    .policy-check__text { font-size: 0.8125rem; color: var(--gray-4); line-height: 1.6; }
+    .policy-check__text a { color: var(--teal); text-decoration: underline; }
+
+    /* ---- Submit ---- */
+    .booking-submit {
+      background: var(--white);
+      border-radius: var(--r-lg);
+      padding: 20px 24px;
+      border: 1px solid var(--gray-2);
+    }
+    .booking-submit__note {
+      font-size: 0.75rem;
+      color: var(--gray-3);
+      text-align: center;
+      margin-top: 10px;
+      line-height: 1.6;
+    }
+    .booking-submit__note a { color: var(--teal); }
+
+    /* ---- Summary card ---- */
+    .booking-summary {
+      background: var(--white);
+      border-radius: var(--r-xl);
+      border: 1px solid var(--gray-2);
+      overflow: hidden;
+      position: sticky;
+      top: 80px;
+      box-shadow: var(--shadow-md);
+    }
+    .booking-summary__img { height: 180px; overflow: hidden; }
+    .booking-summary__img img { width: 100%; height: 100%; object-fit: cover; }
+    .booking-summary__body { padding: 20px; }
+    .booking-summary__loc { font-size: 0.72rem; color: var(--gray-3); font-weight: 700; text-transform: uppercase; letter-spacing: 0.05em; margin-bottom: 4px; }
+    .booking-summary__name { font-size: 1rem; font-weight: 800; margin-bottom: 14px; }
+
+    .summary-dates {
+      display: grid; grid-template-columns: 1fr 1fr;
+      border: 1.5px solid var(--gray-2);
+      border-radius: var(--r-sm);
+      overflow: hidden;
+      margin-bottom: 10px;
+    }
+    .summary-date { padding: 10px 12px; }
+    .summary-date:first-child { border-right: 1px solid var(--gray-2); }
+    .summary-date__label { font-size: 0.65rem; font-weight: 800; text-transform: uppercase; letter-spacing: 0.04em; color: var(--teal); }
+    .summary-date__val { font-size: 0.875rem; font-weight: 700; margin-top: 2px; }
+
+    .summary-guests {
+      padding: 10px 12px;
+      border: 1.5px solid var(--gray-2);
+      border-radius: var(--r-sm);
+      font-size: 0.875rem;
+      font-weight: 700;
+      margin-bottom: 18px;
+      display: flex; justify-content: space-between;
+    }
+    .summary-guests__label { font-size: 0.65rem; font-weight: 800; text-transform: uppercase; letter-spacing: 0.04em; color: var(--teal); display: block; margin-bottom: 2px; }
+
+    .summary-breakdown { font-size: 0.8125rem; display: flex; flex-direction: column; gap: 8px; border-top: 1px solid var(--gray-2); padding-top: 14px; }
+    .summary-row { display: flex; justify-content: space-between; color: var(--gray-4); }
+    .summary-row--save { color: var(--green); font-weight: 700; }
+    .summary-row--total { font-size: 1rem; font-weight: 900; color: var(--dark); padding-top: 8px; border-top: 1px solid var(--gray-2); margin-top: 4px; }
+
+    .summary-ota {
+      background: var(--teal-bg);
+      border-radius: var(--r-sm);
+      padding: 10px 14px;
+      font-size: 0.78rem;
+      text-align: center;
+      margin-top: 14px;
+      color: var(--teal-dark);
+      border: 1px solid var(--gray-2);
+      line-height: 1.5;
+    }
+
+    /* ---- Login form (hidden by default) ---- */
+    .login-form { display: none; }
+    .login-form.visible { display: block; }
+    .guest-form.hidden { display: none; }
+
+    /* ---- Secure badge ---- */
+    .secure-badge {
+      display: flex; align-items: center; justify-content: center;
+      gap: 6px;
+      font-size: 0.72rem;
+      color: var(--gray-3);
+      margin-top: 14px;
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Member bar -->
+  <div class="member-bar"><span>会員登録で常時 15% オフ・当日キャンセル無料</span><a href="login.html" class="member-bar__login">ログイン</a><a href="login.html" class="member-bar__signup">無料会員登録</a></div>
+
+  <!-- Header -->
+  <header class="header">
+    <div class="header__inner">
+      <a href="index.html" class="header__logo">sumyca <span>stay</span></a>
+      <nav class="header__nav">
+        <a href="property-detail.html">← 物件詳細に戻る</a>
+        <a href="my-trips.html">マイ予約</a>
+      </nav>
+      <div class="header__actions">
+        <div class="lang-toggle">
+          <button class="lang-btn active" onclick="setLang('ja',this)">JP</button>
+          <button class="lang-btn" onclick="setLang('en',this)">EN</button>
+        </div>
+        <a href="login.html" class="btn btn--outline btn--sm">ログイン</a>
+        <a href="login.html" class="btn btn--accent btn--sm">無料会員登録</a>
+        <button class="hamburger" onclick="document.getElementById('mm').classList.add('open')" aria-label="メニュー">
+          <span></span><span></span><span></span>
+        </button>
+      </div>
+    </div>
+  </header>
+
+  <div class="mobile-menu" id="mm">
+    <button class="mobile-menu__close" onclick="document.getElementById('mm').classList.remove('open')">✕</button>
+    <div class="mobile-menu__logo">sumyca <span>stay</span></div>
+    <div class="mobile-menu__lang">
+      <button class="lang-btn active" onclick="setLang('ja',this)">JP</button>
+      <button class="lang-btn" onclick="setLang('en',this)">EN</button>
+    </div>
+    <nav class="mobile-menu__nav">
+      <a href="search.html">物件を探す</a>
+      <a href="area.html">エリアガイド</a>
+      <a href="my-trips.html">マイ予約</a>
+    </nav>
+    <div class="mobile-menu__actions">
+      <a href="login.html" class="btn btn--teal btn--lg btn--block">ログイン</a>
+      <a href="login.html" class="btn btn--accent btn--lg btn--block">無料会員登録</a>
+    </div>
+  </div>
+
+  <main>
+
+    <!-- Progress steps -->
+    <div class="container" style="padding-top:24px;padding-bottom:8px;">
+      <div class="booking-steps">
+        <div class="bstep bstep--done">
+          <div class="bstep__num">✓</div>
+          <div class="bstep__label">物件選択</div>
+        </div>
+        <div class="bstep bstep--active">
+          <div class="bstep__num">2</div>
+          <div class="bstep__label">予約情報</div>
+        </div>
+        <div class="bstep">
+          <div class="bstep__num">3</div>
+          <div class="bstep__label">確認・確定</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="booking-wrap">
+
+      <!-- Left: Form -->
+      <div>
+
+        <!-- Track selector -->
+        <div class="track-selector">
+          <h2>続け方を選んでください</h2>
+          <div class="track-options">
+            <button class="track-btn active" onclick="selectTrack('guest', this)">
+              <div class="track-btn__title">ゲストとして続ける</div>
+              <div class="track-btn__desc">アカウント不要。名前・メール・支払い情報だけで予約完了。</div>
+            </button>
+            <a href="login.html" class="track-btn" style="text-decoration:none;display:block;">
+              <div class="track-btn__title">ログイン / 会員登録</div>
+              <div class="track-btn__desc">会員限定 15% オフ・マイ予約・キャンセル履歴管理。</div>
+            </a>
+          </div>
+        </div>
+
+        <!-- ===== GUEST FORM ===== -->
+        <div class="guest-form" id="guestForm">
+
+          <!-- Guest info -->
+          <div class="bcard">
+            <div class="bcard__title">
+              <span class="bcard__title-icon">👤</span> ゲスト情報
+            </div>
+            <div class="field-row">
+              <div class="field">
+                <label>姓 <span class="req">*</span></label>
+                <input type="text" placeholder="田中" autocomplete="family-name">
+              </div>
+              <div class="field">
+                <label>名 <span class="req">*</span></label>
+                <input type="text" placeholder="太郎" autocomplete="given-name">
+              </div>
+            </div>
+            <div class="field">
+              <label>メールアドレス <span class="req">*</span></label>
+              <input type="email" placeholder="your@email.com" autocomplete="email">
+              <div class="field__hint">予約確認書をこちらに送付します</div>
+            </div>
+            <div class="field">
+              <label>電話番号 <span class="req">*</span></label>
+              <input type="tel" placeholder="090-0000-0000" autocomplete="tel">
+              <div class="field__hint">チェックイン PIN コードを SMS でお送りします</div>
+            </div>
+          </div>
+
+          <!-- Payment -->
+          <div class="bcard">
+            <div class="bcard__title">
+              <span class="bcard__title-icon">💳</span> お支払い情報
+            </div>
+            <div class="card-icons">
+              <span class="card-icon">VISA</span>
+              <span class="card-icon">MC</span>
+              <span class="card-icon">AMEX</span>
+              <span class="card-icon">JCB</span>
+            </div>
+            <div class="field">
+              <label>カード番号 <span class="req">*</span></label>
+              <input type="text" placeholder="1234 5678 9012 3456" autocomplete="cc-number" maxlength="19">
+            </div>
+            <div class="field-row">
+              <div class="field" style="margin-bottom:0;">
+                <label>有効期限 <span class="req">*</span></label>
+                <input type="text" placeholder="MM / YY" autocomplete="cc-exp" maxlength="7">
+              </div>
+              <div class="field" style="margin-bottom:0;">
+                <label>セキュリティコード <span class="req">*</span></label>
+                <input type="text" placeholder="CVV" autocomplete="cc-csc" maxlength="4">
+              </div>
+            </div>
+            <div class="field" style="margin-top:14px;">
+              <label>カード名義 <span class="req">*</span></label>
+              <input type="text" placeholder="TARO TANAKA" autocomplete="cc-name">
+            </div>
+            <div class="secure-badge">
+              🔒 256-bit SSL 暗号化で安全に処理されます
+            </div>
+          </div>
+
+          <!-- Cancel policy -->
+          <div class="bcard">
+            <div class="bcard__title">
+              <span class="bcard__title-icon">📋</span> キャンセルポリシーの確認
+            </div>
+            <div style="background:var(--teal-bg);border-radius:var(--r-md);padding:16px 18px;margin-bottom:16px;border:1px solid var(--gray-2);">
+              <div style="font-weight:800;color:var(--green);margin-bottom:6px;">✓ 前日 24 時まで無料キャンセル</div>
+              <div style="font-size:0.8125rem;color:var(--gray-4);line-height:1.7;">
+                チェックイン前日（4月14日）の 24:00 まではキャンセル料ゼロ。<br>
+                それ以降は 1 泊分（¥18,900）のキャンセル料が発生します。
+              </div>
+            </div>
+            <label class="policy-check">
+              <input type="checkbox" id="policyCheck">
+              <div class="policy-check__text">
+                <a href="#">利用規約</a>・<a href="#">プライバシーポリシー</a>・<a href="#">キャンセルポリシー</a>に同意します。今回の予約は非会員（ゲスト）として処理されます。
+              </div>
+            </label>
+          </div>
+
+          <!-- Submit -->
+          <div class="booking-submit">
+            <button class="btn btn--accent btn--lg btn--block" onclick="submitBooking()" id="submitBtn">
+              予約を確定する — ¥48,195
+            </button>
+            <div class="booking-submit__note">
+              確定後、メールと SMS に確認書・PIN コードをお送りします。<br>
+              今はまだ請求されません。チェックイン時に決済が確定します。
+            </div>
+          </div>
+
+        </div>
+        <!-- /guest-form -->
+
+      </div>
+      <!-- /left -->
+
+      <!-- Right: Booking summary -->
+      <div class="booking-summary">
+        <div class="booking-summary__img">
+          <img src="https://images.unsplash.com/photo-1540959733332-eab4deabeeaf?w=720&h=360&fit=crop" alt="デザイナーズ 1LDK 原宿">
+        </div>
+        <div class="booking-summary__body">
+          <div class="booking-summary__loc">東京 · 原宿</div>
+          <div class="booking-summary__name">デザイナーズ 1LDK 原宿</div>
+
+          <div class="summary-dates">
+            <div class="summary-date">
+              <div class="summary-date__label">チェックイン</div>
+              <div class="summary-date__val">4月15日（火）</div>
+            </div>
+            <div class="summary-date">
+              <div class="summary-date__label">チェックアウト</div>
+              <div class="summary-date__val">4月18日（金）</div>
+            </div>
+          </div>
+
+          <div class="summary-guests">
+            <div>
+              <span class="summary-guests__label">ゲスト</span>
+              2名
+            </div>
+            <div style="font-size:0.8rem;color:var(--gray-3);align-self:flex-end;">3泊</div>
+          </div>
+
+          <div class="summary-breakdown">
+            <div class="summary-row">
+              <span>¥18,900 × 3泊</span>
+              <span>¥56,700</span>
+            </div>
+            <div class="summary-row summary-row--save">
+              <span>公式直接予約割引 (15%)</span>
+              <span>− ¥8,505</span>
+            </div>
+            <div class="summary-row">
+              <span>清掃料</span>
+              <span>¥0</span>
+            </div>
+            <div class="summary-row summary-row--total">
+              <span>合計（税込）</span>
+              <span>¥48,195</span>
+            </div>
+          </div>
+
+          <div class="summary-ota">
+            Airbnb 経由だと <strong>¥56,700</strong><br>
+            <strong style="color:var(--green);">公式直接予約で ¥8,505 お得</strong>
+          </div>
+        </div>
+      </div>
+
+    </div>
+    <!-- /booking-wrap -->
+
+  </main>
+
+  <script>
+    function setLang(lang, btn) {
+      document.querySelectorAll('.lang-btn').forEach(b => b.classList.remove('active'));
+      btn.classList.add('active');
+      document.documentElement.lang = lang;
+    }
+
+    function selectTrack(track, btn) {
+      document.querySelectorAll('.track-btn').forEach(b => b.classList.remove('active'));
+      btn.classList.add('active');
+
+      var guestForm = document.getElementById('guestForm');
+
+      if (track === 'guest') {
+        guestForm.classList.remove('hidden');
+      } else {
+        guestForm.classList.add('hidden');
+      }
+    }
+
+    function submitBooking() {
+      var check = document.getElementById('policyCheck');
+      if (!check.checked) {
+        check.closest('.policy-check').style.outline = '2px solid var(--amber)';
+        check.closest('.policy-check').style.borderRadius = '8px';
+        check.scrollIntoView({ behavior: 'smooth', block: 'center' });
+        return;
+      }
+      document.getElementById('submitBtn').textContent = '処理中…';
+      document.getElementById('submitBtn').disabled = true;
+      setTimeout(function() {
+        window.location.href = 'booking-complete.html';
+      }, 1200);
+    }
+  </script>
+
+</body>
+</html>
