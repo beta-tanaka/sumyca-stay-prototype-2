@@ -1,165 +1,184 @@
 <!DOCTYPE html>
-<html lang="ja" prefix="og: https://ogp.me/ns#">
+<html lang="ja">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-
-  <!-- SEO: Core meta -->
-  <title>エリアから探す | 東京・大阪・京都の民泊 — sumyca stay</title>
-  <meta name="description" content="東京・大阪・京都・福岡・沖縄・北海道の民泊を直接予約。全国241件以上。会員登録でOTAより15%安く。">
-  <meta name="robots" content="index, follow">
-  <link rel="canonical" href="https://beta-tanaka.github.io/sumyca-stay-prototype-2/area.html">
-
-  <!-- SEO: Open Graph -->
-  <meta property="og:type" content="website">
-  <meta property="og:site_name" content="sumyca stay">
-  <meta property="og:title" content="エリアから探す | 東京・大阪・京都の民泊 — sumyca stay">
-  <meta property="og:description" content="東京・大阪・京都・福岡・沖縄・北海道の民泊を直接予約。全国241件以上。会員登録でOTAより15%安く。">
-  <meta property="og:url" content="https://beta-tanaka.github.io/sumyca-stay-prototype-2/area.html">
-  <meta property="og:image" content="https://images.unsplash.com/photo-1540959733332-eab4deabeeaf?w=1200&h=630&fit=crop">
-  <meta property="og:locale" content="ja_JP">
-
-  <!-- AIO: JSON-LD -->
-  <script type="application/ld+json">
-  {
-    "@context": "https://schema.org",
-    "@graph": [
-      {
-        "@type": "BreadcrumbList",
-        "itemListElement": [
-          { "@type": "ListItem", "position": 1, "name": "ホーム", "item": "https://beta-tanaka.github.io/sumyca-stay-prototype-2/" },
-          { "@type": "ListItem", "position": 2, "name": "エリアガイド", "item": "https://beta-tanaka.github.io/sumyca-stay-prototype-2/area.html" }
-        ]
-      },
-      {
-        "@type": "ItemList",
-        "name": "sumyca stay 対応エリア一覧",
-        "description": "sumyca stay で直接予約できる全国の民泊エリア",
-        "numberOfItems": 6,
-        "itemListElement": [
-          { "@type": "ListItem", "position": 1, "item": { "@type": "City", "name": "東京", "containedInPlace": { "@type": "Country", "name": "日本" } } },
-          { "@type": "ListItem", "position": 2, "item": { "@type": "City", "name": "大阪", "containedInPlace": { "@type": "Country", "name": "日本" } } },
-          { "@type": "ListItem", "position": 3, "item": { "@type": "City", "name": "京都", "containedInPlace": { "@type": "Country", "name": "日本" } } },
-          { "@type": "ListItem", "position": 4, "item": { "@type": "City", "name": "福岡", "containedInPlace": { "@type": "Country", "name": "日本" } } },
-          { "@type": "ListItem", "position": 5, "item": { "@type": "City", "name": "沖縄", "containedInPlace": { "@type": "Country", "name": "日本" } } },
-          { "@type": "ListItem", "position": 6, "item": { "@type": "City", "name": "北海道", "containedInPlace": { "@type": "Country", "name": "日本" } } }
-        ]
-      }
-    ]
-  }
-  </script>
-
+  <title>エリアから探す — 東京の民泊・宿泊施設 | sumyca stay</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="css/style.css">
-  <style>
-    /* ---- Area Hero ---- */
-    .area-hero {
-      background: var(--teal-bg);
-      text-align: center;
-      padding: 80px 24px 72px;
-    }
-    .area-hero__label {
-      display: inline-block;
-      font-size: 0.75rem;
-      font-weight: 700;
-      letter-spacing: 0.14em;
-      color: var(--teal);
-      text-transform: uppercase;
-      margin-bottom: 16px;
-    }
-    .area-hero__title {
-      font-size: clamp(2rem, 5vw, 3rem);
-      font-weight: 900;
-      color: var(--dark);
-      margin-bottom: 12px;
-      line-height: 1.15;
-    }
-    .area-hero__sub {
-      font-size: 1rem;
-      color: var(--gray-3);
-      font-weight: 500;
-    }
 
-    /* ---- City Grid ---- */
-    .area-section {
-      padding: 72px 24px;
+  <style>
+    /* ===== Area Index Page Styles ===== */
+
+    /* Hero */
+    .area-index-hero {
+      background: var(--gray-1);
+      padding: 40px 24px;
     }
-    .city-grid {
+    .area-index-hero__inner {
       max-width: 1100px;
       margin: 0 auto;
+    }
+    .area-index-hero__breadcrumb {
+      font-size: 13px;
+      color: var(--gray-4);
+      margin-bottom: 16px;
+    }
+    .area-index-hero__breadcrumb a {
+      color: var(--gray-4);
+      text-decoration: none;
+    }
+    .area-index-hero__breadcrumb a:hover {
+      color: var(--teal);
+    }
+    .area-index-hero__breadcrumb span {
+      margin: 0 6px;
+    }
+    .area-index-hero h1 {
+      font-size: clamp(28px, 4vw, 40px);
+      font-weight: 800;
+      color: var(--dark);
+      margin: 0 0 12px;
+    }
+    .area-index-hero__sub {
+      font-size: 16px;
+      color: var(--gray-4);
+      margin: 0;
+    }
+
+    /* Section wrapper */
+    .area-section {
+      max-width: 1100px;
+      margin: 0 auto;
+      padding: 56px 24px;
+    }
+    .area-section + .area-section {
+      padding-top: 0;
+    }
+    .area-section__heading {
+      font-size: 22px;
+      font-weight: 800;
+      color: var(--dark);
+      margin: 0 0 28px;
+    }
+
+    /* Popular station cards — 3 col */
+    .station-grid {
       display: grid;
       grid-template-columns: repeat(3, 1fr);
       gap: 24px;
     }
-    @media (max-width: 900px) {
-      .city-grid { grid-template-columns: repeat(2, 1fr); }
+    @media (max-width: 768px) {
+      .station-grid {
+        grid-template-columns: repeat(2, 1fr);
+        gap: 16px;
+      }
     }
-    @media (max-width: 560px) {
-      .city-grid { grid-template-columns: 1fr; }
+    @media (max-width: 480px) {
+      .station-grid {
+        grid-template-columns: 1fr;
+      }
     }
-    .city-card {
+
+    .station-card {
       display: block;
+      text-decoration: none;
       border-radius: var(--r-lg);
       overflow: hidden;
-      box-shadow: var(--shadow-sm);
-      position: relative;
-      transition: transform 0.2s, box-shadow 0.2s;
-      aspect-ratio: 400 / 280;
-    }
-    .city-card:hover {
-      transform: translateY(-4px);
+      background: var(--white);
       box-shadow: var(--shadow-md);
+      transition: box-shadow 0.2s, transform 0.2s;
+      color: var(--dark);
     }
-    .city-card img {
+    .station-card:hover {
+      box-shadow: 0 8px 32px rgba(0,0,0,0.14);
+      transform: translateY(-2px);
+    }
+    .station-card__img-wrap {
+      aspect-ratio: 3 / 2;
+      overflow: hidden;
+    }
+    .station-card__img-wrap img {
       width: 100%;
       height: 100%;
       object-fit: cover;
       display: block;
+      transition: transform 0.35s ease;
     }
-    .city-card__overlay {
-      position: absolute;
-      inset: 0;
-      background: linear-gradient(to top, rgba(9,63,63,0.72) 0%, rgba(9,63,63,0.1) 55%, transparent 100%);
+    .station-card:hover .station-card__img-wrap img {
+      transform: scale(1.06);
     }
-    .city-card__body {
-      position: absolute;
-      bottom: 0;
-      left: 0;
-      right: 0;
-      padding: 20px 22px;
+    .station-card__body {
+      padding: 16px;
     }
-    .city-card__name {
-      font-size: 1.375rem;
-      font-weight: 800;
-      color: var(--white);
-      line-height: 1.2;
+    .station-card__name {
+      font-size: 17px;
+      font-weight: 700;
+      margin: 0 0 4px;
+      color: var(--dark);
     }
-    .city-card__count {
-      font-size: 0.825rem;
-      font-weight: 500;
-      color: rgba(255,255,255,0.8);
-      margin-top: 4px;
+    .station-card__count {
+      font-size: 13px;
+      color: var(--gray-4);
+      margin: 0 0 10px;
+    }
+    .station-card__cta {
+      font-size: 13px;
+      font-weight: 600;
+      color: var(--teal);
     }
 
-    /* ---- CTA Strip ---- */
-    .area-cta {
-      background: var(--teal-dark);
-      padding: 64px 24px;
-      text-align: center;
+    /* Ward cards — 4 col */
+    .ward-grid {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 12px;
     }
-    .area-cta__label {
-      font-size: 0.875rem;
-      font-weight: 600;
-      color: rgba(255,255,255,0.65);
-      margin-bottom: 16px;
+    @media (max-width: 900px) {
+      .ward-grid {
+        grid-template-columns: repeat(3, 1fr);
+      }
     }
-    .area-cta__title {
-      font-size: clamp(1.5rem, 3.5vw, 2.25rem);
-      font-weight: 800;
-      color: var(--white);
-      margin-bottom: 28px;
-      line-height: 1.25;
+    @media (max-width: 600px) {
+      .ward-grid {
+        grid-template-columns: repeat(2, 1fr);
+      }
+    }
+
+    .ward-card {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      text-decoration: none;
+      background: var(--white);
+      border: 1.5px solid var(--gray-2);
+      border-radius: var(--r-lg);
+      padding: 14px 16px;
+      transition: border-color 0.2s, box-shadow 0.2s;
+    }
+    .ward-card:hover {
+      border-color: var(--teal);
+      box-shadow: 0 2px 12px rgba(0,180,160,0.10);
+    }
+    .ward-card__info {}
+    .ward-card__name {
+      font-size: 15px;
+      font-weight: 700;
+      color: var(--dark);
+      margin: 0 0 3px;
+    }
+    .ward-card__count {
+      font-size: 12px;
+      color: var(--gray-4);
+      margin: 0;
+    }
+    .ward-card__arrow {
+      font-size: 18px;
+      color: var(--teal);
+      font-weight: 700;
+      flex-shrink: 0;
+      margin-left: 8px;
     }
   </style>
 </head>
@@ -167,18 +186,18 @@
 
   <!-- Member bar -->
   <div class="member-bar">
-    <span>会員登録で常時 15% オフ・当日キャンセル無料</span>
-    <a href="login.html" class="member-bar__login">ログイン</a>
-    <a href="login.html" class="member-bar__signup">無料会員登録</a>
+    直接予約が一番お得。会員登録で常時 15% オフ。
+    <a href="#">無料で登録する →</a>
   </div>
 
   <!-- Header -->
   <header class="header">
     <div class="header__inner">
       <a href="index.html" class="header__logo">sumyca <span>stay</span></a>
-      <nav class="header__nav">
+            <nav class="header__nav">
         <a href="search.html">物件を探す</a>
-        <a href="area.html" style="color:var(--teal);font-weight:700;">エリアガイド</a>
+        <a href="area.html">エリアから探す</a>
+        <a href="building.html">建物から探す</a>
         <a href="my-trips.html">マイ予約</a>
       </nav>
       <div class="header__actions">
@@ -188,139 +207,441 @@
         </div>
         <a href="login.html" class="btn btn--outline btn--sm">ログイン</a>
         <a href="login.html" class="btn btn--accent btn--sm">無料会員登録</a>
-        <button class="hamburger" onclick="document.getElementById('mm').classList.add('open')" aria-label="メニュー">
+        <button class="hamburger" onclick="document.getElementById('mobile-menu').classList.add('open')" aria-label="メニュー">
           <span></span><span></span><span></span>
         </button>
       </div>
     </div>
   </header>
 
-  <div class="mobile-menu" id="mm">
-    <button class="mobile-menu__close" onclick="document.getElementById('mm').classList.remove('open')">✕</button>
+  <!-- Mobile menu -->
+  <div class="mobile-menu" id="mobile-menu">
+    <button class="mobile-menu__close" onclick="document.getElementById('mobile-menu').classList.remove('open')">✕</button>
     <div class="mobile-menu__logo">sumyca <span>stay</span></div>
-    <nav class="mobile-menu__nav">
+    <div class="mobile-menu__lang">
+      <button class="lang-btn active" onclick="setLang('ja',this)">JP</button>
+      <button class="lang-btn" onclick="setLang('en',this)">EN</button>
+    </div>
+        <nav class="mobile-menu__nav">
+      <a href="index.html">ホーム</a>
       <a href="search.html">物件を探す</a>
-      <a href="area.html">エリアガイド</a>
+      <a href="area.html">エリアから探す</a>
+      <a href="building.html">建物から探す</a>
       <a href="my-trips.html">マイ予約</a>
     </nav>
     <div class="mobile-menu__actions">
-      <a href="login.html" class="btn btn--teal btn--lg btn--block">ログイン</a>
-      <a href="login.html" class="btn btn--accent btn--lg btn--block">無料会員登録</a>
+      <a href="#" class="btn btn--outline btn--lg btn--block">ログイン</a>
+      <a href="#" class="btn btn--accent btn--lg btn--block">無料会員登録</a>
     </div>
   </div>
 
-  <main id="main-content">
-
-  <!-- Hero -->
-  <section class="area-hero" aria-label="エリアガイド ヒーロー">
-    <div class="area-hero__label">AREA GUIDE</div>
-    <h1 class="area-hero__title">どのエリアに泊まる？</h1>
-    <p class="area-hero__sub">全国6エリア、241件以上の物件</p>
+  <!-- Area Hero -->
+  <section class="area-index-hero">
+    <div class="area-index-hero__inner">
+      <div class="area-index-hero__breadcrumb">
+        <a href="index.html">ホーム</a>
+        <span>›</span>
+        エリアから探す
+      </div>
+      <h1>エリアから探す</h1>
+      <p class="area-index-hero__sub">東京の人気エリア・駅から、民泊・短期滞在物件を探しましょう。</p>
+    </div>
   </section>
 
-  <!-- City Grid -->
-  <section class="area-section" aria-labelledby="city-grid-heading">
-    <h2 id="city-grid-heading" class="sr-only">エリア一覧</h2>
-    <div class="city-grid">
+  <!-- Section 1: 人気駅・エリア -->
+  <div class="area-section">
+    <h2 class="area-section__heading">人気駅・エリア</h2>
+    <div class="station-grid">
 
-      <a href="search.html" class="city-card" aria-label="東京の物件を探す（124件）">
-        <img src="https://images.unsplash.com/photo-1540959733332-eab4deabeeaf?w=400&h=280&fit=crop" alt="東京">
-        <div class="city-card__overlay"></div>
-        <div class="city-card__body">
-          <div class="city-card__name">東京</div>
-          <div class="city-card__count">124件</div>
+      <a href="area-detail.html?slug=tokyo" class="station-card">
+        <div class="station-card__img-wrap">
+          <img src="https://images.unsplash.com/photo-1540959733332-eab4deabeeaf?w=600&h=400&fit=crop" alt="東京駅・丸の内">
+        </div>
+        <div class="station-card__body">
+          <div class="station-card__name">東京駅・丸の内</div>
+          <div class="station-card__count">23件</div>
+          <div class="station-card__cta">民泊を探す →</div>
         </div>
       </a>
 
-      <a href="search.html" class="city-card" aria-label="大阪の物件を探す（86件）">
-        <img src="https://images.unsplash.com/photo-1493976040374-85c8e12f0c0e?w=400&h=280&fit=crop" alt="大阪">
-        <div class="city-card__overlay"></div>
-        <div class="city-card__body">
-          <div class="city-card__name">大阪</div>
-          <div class="city-card__count">86件</div>
+      <a href="area-detail.html?slug=shinjuku" class="station-card">
+        <div class="station-card__img-wrap">
+          <img src="https://images.unsplash.com/photo-1536376072261-38c75010e6c9?w=600&h=400&fit=crop" alt="新宿">
+        </div>
+        <div class="station-card__body">
+          <div class="station-card__name">新宿</div>
+          <div class="station-card__count">31件</div>
+          <div class="station-card__cta">民泊を探す →</div>
         </div>
       </a>
 
-      <a href="search.html" class="city-card" aria-label="京都の物件を探す（64件）">
-        <img src="https://images.unsplash.com/photo-1528360983277-13d401cdc186?w=400&h=280&fit=crop" alt="京都">
-        <div class="city-card__overlay"></div>
-        <div class="city-card__body">
-          <div class="city-card__name">京都</div>
-          <div class="city-card__count">64件</div>
+      <a href="area-detail.html?slug=shibuya" class="station-card">
+        <div class="station-card__img-wrap">
+          <img src="https://images.unsplash.com/photo-1522708323590-d24dbb6b0267?w=600&h=400&fit=crop" alt="渋谷・原宿">
+        </div>
+        <div class="station-card__body">
+          <div class="station-card__name">渋谷・原宿</div>
+          <div class="station-card__count">28件</div>
+          <div class="station-card__cta">民泊を探す →</div>
         </div>
       </a>
 
-      <a href="search.html" class="city-card" aria-label="福岡の物件を探す（51件）">
-        <img src="https://images.unsplash.com/photo-1551801691-f0bce83d4f68?w=400&h=280&fit=crop" alt="福岡">
-        <div class="city-card__overlay"></div>
-        <div class="city-card__body">
-          <div class="city-card__name">福岡</div>
-          <div class="city-card__count">51件</div>
+      <a href="area-detail.html?slug=ikebukuro" class="station-card">
+        <div class="station-card__img-wrap">
+          <img src="https://images.unsplash.com/photo-1555685812-4b943f1cb0eb?w=600&h=400&fit=crop" alt="池袋">
+        </div>
+        <div class="station-card__body">
+          <div class="station-card__name">池袋</div>
+          <div class="station-card__count">19件</div>
+          <div class="station-card__cta">民泊を探す →</div>
         </div>
       </a>
 
-      <a href="search.html" class="city-card" aria-label="沖縄の物件を探す（38件）">
-        <img src="https://images.unsplash.com/photo-1590559899731-a382839e5549?w=400&h=280&fit=crop" alt="沖縄">
-        <div class="city-card__overlay"></div>
-        <div class="city-card__body">
-          <div class="city-card__name">沖縄</div>
-          <div class="city-card__count">38件</div>
+      <a href="area-detail.html?slug=ueno" class="station-card">
+        <div class="station-card__img-wrap">
+          <img src="https://images.unsplash.com/photo-1528360983277-13d401cdc186?w=600&h=400&fit=crop" alt="上野">
+        </div>
+        <div class="station-card__body">
+          <div class="station-card__name">上野</div>
+          <div class="station-card__count">14件</div>
+          <div class="station-card__cta">民泊を探す →</div>
         </div>
       </a>
 
-      <a href="search.html" class="city-card" aria-label="北海道の物件を探す（42件）">
-        <img src="https://images.unsplash.com/photo-1501854140801-50d01698950b?w=400&h=280&fit=crop" alt="北海道">
-        <div class="city-card__overlay"></div>
-        <div class="city-card__body">
-          <div class="city-card__name">北海道</div>
-          <div class="city-card__count">42件</div>
+      <a href="area-detail.html?slug=asakusa" class="station-card">
+        <div class="station-card__img-wrap">
+          <img src="https://images.unsplash.com/photo-1536676606629-17c91fb65ee6?w=600&h=400&fit=crop" alt="浅草">
+        </div>
+        <div class="station-card__body">
+          <div class="station-card__name">浅草</div>
+          <div class="station-card__count">17件</div>
+          <div class="station-card__cta">民泊を探す →</div>
+        </div>
+      </a>
+
+      <a href="area-detail.html?slug=shinagawa" class="station-card">
+        <div class="station-card__img-wrap">
+          <img src="https://images.unsplash.com/photo-1551801691-f0bce83d4f68?w=600&h=400&fit=crop" alt="品川">
+        </div>
+        <div class="station-card__body">
+          <div class="station-card__name">品川</div>
+          <div class="station-card__count">12件</div>
+          <div class="station-card__cta">民泊を探す →</div>
+        </div>
+      </a>
+
+      <a href="area-detail.html?slug=akihabara" class="station-card">
+        <div class="station-card__img-wrap">
+          <img src="https://images.unsplash.com/photo-1560448204-e02f11c3d0e2?w=600&h=400&fit=crop" alt="秋葉原">
+        </div>
+        <div class="station-card__body">
+          <div class="station-card__name">秋葉原</div>
+          <div class="station-card__count">11件</div>
+          <div class="station-card__cta">民泊を探す →</div>
+        </div>
+      </a>
+
+      <a href="area-detail.html?slug=roppongi" class="station-card">
+        <div class="station-card__img-wrap">
+          <img src="https://images.unsplash.com/photo-1493976040374-85c8e12f0c0e?w=600&h=400&fit=crop" alt="六本木">
+        </div>
+        <div class="station-card__body">
+          <div class="station-card__name">六本木</div>
+          <div class="station-card__count">16件</div>
+          <div class="station-card__cta">民泊を探す →</div>
+        </div>
+      </a>
+
+      <a href="area-detail.html?slug=ginza" class="station-card">
+        <div class="station-card__img-wrap">
+          <img src="https://images.unsplash.com/photo-1484154218962-a197022b5858?w=600&h=400&fit=crop" alt="銀座・有楽町">
+        </div>
+        <div class="station-card__body">
+          <div class="station-card__name">銀座・有楽町</div>
+          <div class="station-card__count">18件</div>
+          <div class="station-card__cta">民泊を探す →</div>
+        </div>
+      </a>
+
+      <a href="area-detail.html?slug=shinbashi" class="station-card">
+        <div class="station-card__img-wrap">
+          <img src="https://images.unsplash.com/photo-1554995207-c18c203602cb?w=600&h=400&fit=crop" alt="新橋・汐留">
+        </div>
+        <div class="station-card__body">
+          <div class="station-card__name">新橋・汐留</div>
+          <div class="station-card__count">9件</div>
+          <div class="station-card__cta">民泊を探す →</div>
+        </div>
+      </a>
+
+      <a href="area-detail.html?slug=oshiage" class="station-card">
+        <div class="station-card__img-wrap">
+          <img src="https://images.unsplash.com/photo-1556909114-f6e7ad7d3136?w=600&h=400&fit=crop" alt="押上・スカイツリー">
+        </div>
+        <div class="station-card__body">
+          <div class="station-card__name">押上・スカイツリー</div>
+          <div class="station-card__count">8件</div>
+          <div class="station-card__cta">民泊を探す →</div>
         </div>
       </a>
 
     </div>
+  </div>
+
+  <!-- Section 2: 東京23区 -->
+  <div class="area-section">
+    <h2 class="area-section__heading">東京23区</h2>
+    <div class="ward-grid">
+
+      <a href="area-detail.html?slug=chiyoda" class="ward-card">
+        <div class="ward-card__info">
+          <div class="ward-card__name">千代田区</div>
+          <div class="ward-card__count">8件</div>
+        </div>
+        <div class="ward-card__arrow">›</div>
+      </a>
+
+      <a href="area-detail.html?slug=chuo" class="ward-card">
+        <div class="ward-card__info">
+          <div class="ward-card__name">中央区</div>
+          <div class="ward-card__count">11件</div>
+        </div>
+        <div class="ward-card__arrow">›</div>
+      </a>
+
+      <a href="area-detail.html?slug=minato" class="ward-card">
+        <div class="ward-card__info">
+          <div class="ward-card__name">港区</div>
+          <div class="ward-card__count">19件</div>
+        </div>
+        <div class="ward-card__arrow">›</div>
+      </a>
+
+      <a href="area-detail.html?slug=shinjuku-ku" class="ward-card">
+        <div class="ward-card__info">
+          <div class="ward-card__name">新宿区</div>
+          <div class="ward-card__count">24件</div>
+        </div>
+        <div class="ward-card__arrow">›</div>
+      </a>
+
+      <a href="area-detail.html?slug=bunkyo" class="ward-card">
+        <div class="ward-card__info">
+          <div class="ward-card__name">文京区</div>
+          <div class="ward-card__count">7件</div>
+        </div>
+        <div class="ward-card__arrow">›</div>
+      </a>
+
+      <a href="area-detail.html?slug=taito" class="ward-card">
+        <div class="ward-card__info">
+          <div class="ward-card__name">台東区</div>
+          <div class="ward-card__count">15件</div>
+        </div>
+        <div class="ward-card__arrow">›</div>
+      </a>
+
+      <a href="area-detail.html?slug=sumida" class="ward-card">
+        <div class="ward-card__info">
+          <div class="ward-card__name">墨田区</div>
+          <div class="ward-card__count">12件</div>
+        </div>
+        <div class="ward-card__arrow">›</div>
+      </a>
+
+      <a href="area-detail.html?slug=koto" class="ward-card">
+        <div class="ward-card__info">
+          <div class="ward-card__name">江東区</div>
+          <div class="ward-card__count">9件</div>
+        </div>
+        <div class="ward-card__arrow">›</div>
+      </a>
+
+      <a href="area-detail.html?slug=shinagawa-ku" class="ward-card">
+        <div class="ward-card__info">
+          <div class="ward-card__name">品川区</div>
+          <div class="ward-card__count">13件</div>
+        </div>
+        <div class="ward-card__arrow">›</div>
+      </a>
+
+      <a href="area-detail.html?slug=meguro" class="ward-card">
+        <div class="ward-card__info">
+          <div class="ward-card__name">目黒区</div>
+          <div class="ward-card__count">10件</div>
+        </div>
+        <div class="ward-card__arrow">›</div>
+      </a>
+
+      <a href="area-detail.html?slug=ota" class="ward-card">
+        <div class="ward-card__info">
+          <div class="ward-card__name">大田区</div>
+          <div class="ward-card__count">8件</div>
+        </div>
+        <div class="ward-card__arrow">›</div>
+      </a>
+
+      <a href="area-detail.html?slug=setagaya" class="ward-card">
+        <div class="ward-card__info">
+          <div class="ward-card__name">世田谷区</div>
+          <div class="ward-card__count">14件</div>
+        </div>
+        <div class="ward-card__arrow">›</div>
+      </a>
+
+      <a href="area-detail.html?slug=shibuya-ku" class="ward-card">
+        <div class="ward-card__info">
+          <div class="ward-card__name">渋谷区</div>
+          <div class="ward-card__count">21件</div>
+        </div>
+        <div class="ward-card__arrow">›</div>
+      </a>
+
+      <a href="area-detail.html?slug=nakano" class="ward-card">
+        <div class="ward-card__info">
+          <div class="ward-card__name">中野区</div>
+          <div class="ward-card__count">6件</div>
+        </div>
+        <div class="ward-card__arrow">›</div>
+      </a>
+
+      <a href="area-detail.html?slug=suginami" class="ward-card">
+        <div class="ward-card__info">
+          <div class="ward-card__name">杉並区</div>
+          <div class="ward-card__count">8件</div>
+        </div>
+        <div class="ward-card__arrow">›</div>
+      </a>
+
+      <a href="area-detail.html?slug=toshima" class="ward-card">
+        <div class="ward-card__info">
+          <div class="ward-card__name">豊島区</div>
+          <div class="ward-card__count">16件</div>
+        </div>
+        <div class="ward-card__arrow">›</div>
+      </a>
+
+      <a href="area-detail.html?slug=kita" class="ward-card">
+        <div class="ward-card__info">
+          <div class="ward-card__name">北区</div>
+          <div class="ward-card__count">5件</div>
+        </div>
+        <div class="ward-card__arrow">›</div>
+      </a>
+
+      <a href="area-detail.html?slug=arakawa" class="ward-card">
+        <div class="ward-card__info">
+          <div class="ward-card__name">荒川区</div>
+          <div class="ward-card__count">4件</div>
+        </div>
+        <div class="ward-card__arrow">›</div>
+      </a>
+
+      <a href="area-detail.html?slug=itabashi" class="ward-card">
+        <div class="ward-card__info">
+          <div class="ward-card__name">板橋区</div>
+          <div class="ward-card__count">6件</div>
+        </div>
+        <div class="ward-card__arrow">›</div>
+      </a>
+
+      <a href="area-detail.html?slug=nerima" class="ward-card">
+        <div class="ward-card__info">
+          <div class="ward-card__name">練馬区</div>
+          <div class="ward-card__count">5件</div>
+        </div>
+        <div class="ward-card__arrow">›</div>
+      </a>
+
+      <a href="area-detail.html?slug=adachi" class="ward-card">
+        <div class="ward-card__info">
+          <div class="ward-card__name">足立区</div>
+          <div class="ward-card__count">4件</div>
+        </div>
+        <div class="ward-card__arrow">›</div>
+      </a>
+
+      <a href="area-detail.html?slug=katsushika" class="ward-card">
+        <div class="ward-card__info">
+          <div class="ward-card__name">葛飾区</div>
+          <div class="ward-card__count">3件</div>
+        </div>
+        <div class="ward-card__arrow">›</div>
+      </a>
+
+      <a href="area-detail.html?slug=edogawa" class="ward-card">
+        <div class="ward-card__info">
+          <div class="ward-card__name">江戸川区</div>
+          <div class="ward-card__count">4件</div>
+        </div>
+        <div class="ward-card__arrow">›</div>
+      </a>
+
+    </div>
+  </div>
+
+  <!-- Newsletter Signup -->
+  <section class="newsletter">
+    <div class="newsletter__form-side">
+      <div class="newsletter__eyebrow">Newsletter</div>
+      <h2 class="newsletter__title">Stay connected,<br>stay inspired.</h2>
+      <div class="newsletter__row">
+        <input class="newsletter__input" type="email" placeholder="メールアドレスを入力">
+        <button class="newsletter__btn">登録する</button>
+      </div>
+      <p class="newsletter__note">登録すると、sumyca stay からの特別オファーやお知らせを受け取ることに同意したことになります。詳細は<a href="#">プライバシーポリシー</a>および<a href="#">利用規約</a>をご確認ください。</p>
+    </div>
+    <div class="newsletter__img-side">
+      <img src="https://images.unsplash.com/photo-1540959733332-eab4deabeeaf?w=900&h=600&fit=crop" alt="">
+    </div>
   </section>
 
-  <!-- CTA Strip -->
-  <section class="area-cta" aria-label="物件検索へのCTA">
-    <p class="area-cta__label">気になるエリアが決まったら</p>
-    <h2 class="area-cta__title">直接予約で、最安値。</h2>
-    <a href="search.html" class="btn btn--accent btn--lg">物件を探す →</a>
+  <!-- Stay Banner -->
+  <section class="stay-banner">
+    <div class="stay-banner__inner">
+      <div class="stay-banner__text">
+        <h2>つながろう、<br>インスパイアされよう。</h2>
+        <p>旅のヒントや物件情報をフォローする</p>
+      </div>
+      <div class="stay-banner__social">
+        <a href="#" class="social-btn">𝕏</a>
+        <a href="#" class="social-btn">in</a>
+        <a href="#" class="social-btn">📷</a>
+        <a href="#" class="social-btn">▶</a>
+      </div>
+    </div>
   </section>
-
-  </main><!-- /main -->
 
   <!-- Footer -->
-  <footer class="footer" aria-label="サイトフッター">
-    <div class="footer__inner">
-      <div>
-        <div class="footer__brand">sumyca <span>stay</span></div>
-        <p class="footer__desc">全国の民泊・短期滞在施設を、直接予約で最安値保証。フロントなし、PIN セルフ入室。</p>
+  <footer class="footer">
+    <div class="container">
+      <div class="footer__grid">
+        <div>
+          <div class="footer__brand">sumyca stay</div>
+          <p class="footer__desc">全国の厳選された民泊・宿泊施設を、スマートな体験とともにお届けします。</p>
+        </div>
+        <div class="footer__col">
+          <h4>物件を探す</h4>
+          <a href="#">東京</a><a href="#">大阪</a><a href="#">京都</a><a href="#">福岡</a><a href="#">沖縄</a>
+        </div>
+        <div class="footer__col">
+          <h4>サポート</h4>
+          <a href="#">ヘルプセンター</a><a href="#">よくある質問</a><a href="#">お問い合わせ</a><a href="#">ホストになる</a>
+        </div>
+        <div class="footer__col">
+          <h4>会社情報</h4>
+          <a href="#">運営会社</a><a href="#">利用規約</a><a href="#">プライバシーポリシー</a><a href="#">特定商取引法</a>
+        </div>
       </div>
-      <div class="footer__col">
-        <h4>物件を探す</h4>
-        <a href="search.html">東京</a>
-        <a href="search.html">大阪</a>
-        <a href="search.html">京都</a>
-        <a href="search.html">福岡</a>
-        <a href="search.html">沖縄</a>
-      </div>
-      <div class="footer__col">
-        <h4>サポート</h4>
-        <a href="#">よくある質問</a>
-        <a href="#">キャンセルポリシー</a>
-        <a href="#">利用規約</a>
-        <a href="#">プライバシーポリシー</a>
-      </div>
-    </div>
-    <div class="footer__bottom">
-      <span class="footer__copy">© 2026 sumyca stay. All rights reserved.</span>
-      <div class="payment-icons">
-        <span class="payment-icon">VISA</span>
-        <span class="payment-icon">MC</span>
-        <span class="payment-icon">AMEX</span>
-        <span class="payment-icon">PayPay</span>
+      <div class="footer__bottom">
+        <span>© 2026 sumyca stay. All rights reserved.</span>
+        <div class="payment-icons">
+          <span class="payment-icon">VISA</span><span class="payment-icon">MC</span>
+          <span class="payment-icon">AMEX</span><span class="payment-icon">PayPay</span>
+        </div>
       </div>
     </div>
+    <div class="footer__logo-giant">sumyca</div>
   </footer>
 
   <script>

@@ -1,0 +1,712 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>エリア詳細 | sumyca stay</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="css/style.css">
+  <!-- Leaflet -->
+  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css">
+  <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+
+  <style>
+    /* ===== Area Detail Page Styles ===== */
+
+    /* Member bar */
+    .member-bar {
+      background: var(--teal-dark);
+      color: var(--white);
+      text-align: center;
+      padding: 10px var(--sp-6);
+      font-size: var(--font-xs);
+      font-weight: 600;
+      letter-spacing: 0.04em;
+    }
+    .member-bar a {
+      color: #7DD8D8;
+      text-decoration: underline;
+      margin-left: var(--sp-3);
+    }
+
+    /* Breadcrumb */
+    .breadcrumb {
+      max-width: 1100px;
+      margin: 0 auto;
+      padding: 18px 24px 0;
+      font-size: 13px;
+      color: var(--gray-4);
+    }
+    .breadcrumb a {
+      color: var(--gray-4);
+      text-decoration: none;
+    }
+    .breadcrumb a:hover { color: var(--teal); }
+    .breadcrumb span { margin: 0 6px; }
+
+    /* Hero section */
+    .area-hero-detail {
+      max-width: 1100px;
+      margin: 0 auto;
+      padding: 32px 24px 56px;
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 48px;
+      align-items: center;
+    }
+    @media (max-width: 768px) {
+      .area-hero-detail {
+        grid-template-columns: 1fr;
+        gap: 28px;
+        padding: 24px 20px 40px;
+      }
+    }
+
+    .area-hero-detail__copy h1 {
+      font-size: clamp(26px, 4vw, 40px);
+      font-weight: 800;
+      color: var(--dark);
+      line-height: 1.2;
+      margin: 0 0 16px;
+    }
+    .area-hero-detail__desc {
+      font-size: 16px;
+      color: var(--gray-4);
+      line-height: 1.7;
+      margin: 0 0 28px;
+    }
+
+    .area-stats {
+      display: flex;
+      gap: 32px;
+      margin-bottom: 32px;
+      flex-wrap: wrap;
+    }
+    .area-stat {}
+    .area-stat__num {
+      font-size: 28px;
+      font-weight: 800;
+      color: var(--teal);
+      line-height: 1;
+      margin-bottom: 4px;
+    }
+    .area-stat__label {
+      font-size: 12px;
+      color: var(--gray-3);
+      font-weight: 600;
+      letter-spacing: 0.04em;
+      text-transform: uppercase;
+    }
+
+    .area-hero-detail__access {
+      font-size: 13px;
+      color: var(--gray-4);
+      margin-bottom: 28px;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+    .area-hero-detail__access::before {
+      content: '📍';
+      font-size: 14px;
+    }
+
+    .area-hero-detail__img-wrap {
+      border-radius: 16px;
+      overflow: hidden;
+      aspect-ratio: 4 / 3;
+      box-shadow: var(--shadow-lg);
+    }
+    .area-hero-detail__img-wrap img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      display: block;
+      transition: transform 0.4s ease;
+    }
+    .area-hero-detail__img-wrap:hover img {
+      transform: scale(1.03);
+    }
+
+    /* Section wrapper */
+    .detail-section {
+      max-width: 1100px;
+      margin: 0 auto;
+      padding: 0 24px 56px;
+    }
+    .detail-section__heading {
+      font-size: 22px;
+      font-weight: 800;
+      color: var(--dark);
+      margin: 0 0 28px;
+    }
+
+    /* Property grid – 3 col */
+    .prop-grid-6 {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 24px;
+    }
+    @media (max-width: 900px) {
+      .prop-grid-6 {
+        grid-template-columns: repeat(2, 1fr);
+        gap: 18px;
+      }
+    }
+    @media (max-width: 540px) {
+      .prop-grid-6 {
+        grid-template-columns: 1fr;
+        gap: 16px;
+      }
+    }
+
+    /* Property card */
+    .prop-card {
+      background: var(--white);
+      border-radius: 14px;
+      overflow: hidden;
+      box-shadow: var(--shadow-md);
+      transition: box-shadow 0.2s, transform 0.2s;
+      cursor: pointer;
+    }
+    .prop-card:hover {
+      box-shadow: 0 8px 32px rgba(0,0,0,0.14);
+      transform: translateY(-3px);
+    }
+    .prop-card__img-wrap {
+      aspect-ratio: 3 / 2;
+      overflow: hidden;
+    }
+    .prop-card__img-wrap img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      display: block;
+      transition: transform 0.35s ease;
+    }
+    .prop-card:hover .prop-card__img-wrap img {
+      transform: scale(1.06);
+    }
+    .prop-card__body {
+      padding: 14px 16px 16px;
+    }
+    .prop-card__type {
+      font-size: 11px;
+      font-weight: 700;
+      color: var(--teal);
+      text-transform: uppercase;
+      letter-spacing: 0.06em;
+      margin-bottom: 4px;
+    }
+    .prop-card__title {
+      font-size: 15px;
+      font-weight: 700;
+      color: var(--dark);
+      margin: 0 0 10px;
+      line-height: 1.4;
+    }
+    .prop-card__footer {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+    .prop-card__price {
+      font-size: 17px;
+      font-weight: 800;
+      color: var(--dark);
+    }
+    .prop-card__price span {
+      font-size: 12px;
+      font-weight: 400;
+      color: var(--gray-3);
+    }
+    .prop-card__rating {
+      font-size: 13px;
+      font-weight: 700;
+      color: var(--dark);
+      display: flex;
+      align-items: center;
+      gap: 4px;
+    }
+    .prop-card__rating::before {
+      content: '★';
+      color: var(--star);
+    }
+
+    /* Map section */
+    .map-section {
+      max-width: 1100px;
+      margin: 0 auto;
+      padding: 0 24px 56px;
+    }
+    .map-section__heading {
+      font-size: 22px;
+      font-weight: 800;
+      color: var(--dark);
+      margin: 0 0 20px;
+    }
+    #areaMap {
+      width: 100%;
+      height: 420px;
+      border-radius: 16px;
+      overflow: hidden;
+      box-shadow: var(--shadow-md);
+    }
+    @media (max-width: 600px) {
+      #areaMap { height: 280px; }
+    }
+
+    /* Nearby areas grid */
+    .nearby-areas-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 20px;
+    }
+    @media (max-width: 700px) {
+      .nearby-areas-grid {
+        grid-template-columns: 1fr;
+        gap: 12px;
+      }
+    }
+
+    .nearby-card {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      text-decoration: none;
+      background: var(--white);
+      border: 1.5px solid var(--gray-2);
+      border-radius: 14px;
+      padding: 18px 20px;
+      transition: border-color 0.2s, box-shadow 0.2s, transform 0.2s;
+    }
+    .nearby-card:hover {
+      border-color: var(--teal);
+      box-shadow: 0 4px 16px rgba(0,110,110,0.12);
+      transform: translateY(-2px);
+    }
+    .nearby-card__info {}
+    .nearby-card__name {
+      font-size: 15px;
+      font-weight: 700;
+      color: var(--dark);
+      margin: 0 0 3px;
+    }
+    .nearby-card__count {
+      font-size: 12px;
+      color: var(--gray-3);
+      margin: 0;
+    }
+    .nearby-card__arrow {
+      font-size: 20px;
+      color: var(--teal);
+      font-weight: 700;
+      flex-shrink: 0;
+    }
+
+    /* SEO text section */
+    .area-seo-text {
+      max-width: 1100px;
+      margin: 0 auto;
+      padding: 0 24px 64px;
+    }
+    .area-seo-text h2 {
+      font-size: 20px;
+      font-weight: 800;
+      color: var(--dark);
+      margin: 0 0 16px;
+    }
+    .area-seo-text p {
+      font-size: 15px;
+      color: var(--gray-4);
+      line-height: 1.85;
+      max-width: 800px;
+    }
+    .area-seo-text p + p {
+      margin-top: 14px;
+    }
+
+    /* Divider */
+    .section-divider {
+      max-width: 1100px;
+      margin: 0 auto 0;
+      padding: 0 24px;
+      border: none;
+      border-top: 1px solid var(--gray-2);
+      margin-bottom: 48px;
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Member bar -->
+  <div class="member-bar">直接予約が一番お得。会員登録で常時 15% オフ。<a href="#">無料で登録する →</a></div>
+
+  <!-- Header -->
+  <header class="header">
+    <div class="header__inner">
+      <a href="index.html" class="header__logo">sumyca <span>stay</span></a>
+            <nav class="header__nav">
+        <a href="search.html">物件を探す</a>
+        <a href="area.html">エリアから探す</a>
+        <a href="building.html">建物から探す</a>
+        <a href="my-trips.html">マイ予約</a>
+      </nav>
+      <div class="header__actions">
+        <div class="lang-toggle">
+          <button class="lang-btn active" onclick="setLang('ja',this)">JP</button>
+          <button class="lang-btn" onclick="setLang('en',this)">EN</button>
+        </div>
+        <a href="login.html" class="btn btn--outline btn--sm">ログイン</a>
+        <a href="login.html" class="btn btn--accent btn--sm">無料会員登録</a>
+        <button class="hamburger" onclick="document.getElementById('mobile-menu').classList.add('open')"><span></span><span></span><span></span></button>
+      </div>
+    </div>
+  </header>
+
+  <!-- Mobile menu -->
+  <div class="mobile-menu" id="mobile-menu">
+    <button class="mobile-menu__close" onclick="document.getElementById('mobile-menu').classList.remove('open')">✕</button>
+    <div class="mobile-menu__logo">sumyca <span>stay</span></div>
+    <div class="mobile-menu__lang">
+      <button class="lang-btn active" onclick="setLang('ja',this)">JP</button>
+      <button class="lang-btn" onclick="setLang('en',this)">EN</button>
+    </div>
+        <nav class="mobile-menu__nav">
+      <a href="index.html">ホーム</a>
+      <a href="search.html">物件を探す</a>
+      <a href="area.html">エリアから探す</a>
+      <a href="building.html">建物から探す</a>
+      <a href="my-trips.html">マイ予約</a>
+    </nav>
+  </div>
+
+  <!-- Dynamic area content -->
+  <div id="areaContent"></div>
+
+  <!-- Footer -->
+  <footer class="footer">
+    <div class="container">
+      <div class="footer__grid">
+        <div>
+          <div class="footer__brand">sumyca stay</div>
+          <p class="footer__desc">全国の厳選された民泊・宿泊施設を、スマートな体験とともにお届けします。</p>
+        </div>
+        <div class="footer__col">
+          <h4>エリアから探す</h4>
+          <a href="area-detail.html?slug=shinjuku">新宿</a>
+          <a href="area-detail.html?slug=shibuya">渋谷</a>
+          <a href="area-detail.html?slug=asakusa">浅草</a>
+          <a href="area-detail.html?slug=roppongi">六本木</a>
+          <a href="area-detail.html?slug=ginza">銀座</a>
+        </div>
+        <div class="footer__col">
+          <h4>サポート</h4>
+          <a href="#">ヘルプセンター</a>
+          <a href="#">よくある質問</a>
+          <a href="#">お問い合わせ</a>
+        </div>
+        <div class="footer__col">
+          <h4>会社情報</h4>
+          <a href="#">運営会社</a>
+          <a href="#">利用規約</a>
+          <a href="#">プライバシーポリシー</a>
+        </div>
+      </div>
+      <div class="footer__bottom"><span>© 2026 sumyca stay. All rights reserved.</span></div>
+    </div>
+    <div class="footer__logo-giant">sumyca</div>
+  </footer>
+
+  <script>
+    /* =====================================================
+       AREA DATA — 36 エリア
+    ===================================================== */
+    const AREAS = {
+      // 人気駅・エリア
+      tokyo:       { name:'東京駅・丸の内', type:'station', lat:35.6812, lng:139.7671, propCount:23, avgPrice:19800, avgRating:4.87, img:'photo-1540959733332-eab4deabeeaf', desc:'東京駅すぐの丸の内・大手町エリア。ビジネス出張にも観光にも便利な好立地。', nearbyAccess:'東京駅 徒歩圏内', related:['chiyoda','chuo','shinbashi'] },
+      shinjuku:    { name:'新宿', type:'station', lat:35.6896, lng:139.7006, propCount:31, avgPrice:16500, avgRating:4.85, img:'photo-1536376072261-38c75010e6c9', desc:'東京最大のターミナル駅。歌舞伎町・西新宿・代々木など多彩なエリアが集まる。', nearbyAccess:'新宿駅 徒歩圏内', related:['shinjuku-ku','shibuya','ikebukuro'] },
+      shibuya:     { name:'渋谷・原宿', type:'station', lat:35.6580, lng:139.7016, propCount:28, avgPrice:18500, avgRating:4.89, img:'photo-1522708323590-d24dbb6b0267', desc:'トレンドの発信地・渋谷と、ファッションの街・原宿。表参道も徒歩圏。', nearbyAccess:'渋谷駅・原宿駅 徒歩圏内', related:['shibuya-ku','roppongi','meguro'] },
+      ikebukuro:   { name:'池袋', type:'station', lat:35.7295, lng:139.7109, propCount:19, avgPrice:14200, avgRating:4.82, img:'photo-1555685812-4b943f1cb0eb', desc:'サンシャインシティや多彩なグルメが揃う副都心。アクセスも抜群。', nearbyAccess:'池袋駅 徒歩圏内', related:['toshima','nakano','itabashi'] },
+      ueno:        { name:'上野', type:'station', lat:35.7141, lng:139.7774, propCount:14, avgPrice:13800, avgRating:4.78, img:'photo-1528360983277-13d401cdc186', desc:'上野公園・美術館・動物園が徒歩圏。アメ横の賑わいも魅力。', nearbyAccess:'上野駅 徒歩圏内', related:['taito','asakusa','akihabara'] },
+      asakusa:     { name:'浅草', type:'station', lat:35.7148, lng:139.7967, propCount:17, avgPrice:14500, avgRating:4.83, img:'photo-1536676606629-17c91fb65ee6', desc:'下町情緒あふれる浅草。雷門・仲見世・スカイツリーが徒歩圏内。', nearbyAccess:'浅草駅 徒歩圏内', related:['taito','sumida','oshiage'] },
+      shinagawa:   { name:'品川', type:'station', lat:35.6284, lng:139.7387, propCount:12, avgPrice:17200, avgRating:4.80, img:'photo-1551801691-f0bce83d4f68', desc:'羽田空港へ1本。新幹線も停車。ビジネス出張に最適。', nearbyAccess:'品川駅 徒歩圏内', related:['shinagawa-ku','ota','minato'] },
+      akihabara:   { name:'秋葉原', type:'station', lat:35.6984, lng:139.7731, propCount:11, avgPrice:13500, avgRating:4.76, img:'photo-1560448204-e02f11c3d0e2', desc:'電気街・アニメ・サブカルの聖地。神田・御茶ノ水も近い。', nearbyAccess:'秋葉原駅 徒歩圏内', related:['chiyoda','taito','bunkyo'] },
+      roppongi:    { name:'六本木', type:'station', lat:35.6628, lng:139.7315, propCount:16, avgPrice:24000, avgRating:4.91, img:'photo-1493976040374-85c8e12f0c0e', desc:'ミッドタウン・ヒルズ・美術館。夜も賑わう国際色豊かなエリア。', nearbyAccess:'六本木駅 徒歩圏内', related:['minato','ginza','shibuya'] },
+      ginza:       { name:'銀座・有楽町', type:'station', lat:35.6717, lng:139.7650, propCount:18, avgPrice:26500, avgRating:4.92, img:'photo-1484154218962-a197022b5858', desc:'高級ブランドが立ち並ぶ銀座。有楽町・日比谷も隣接。', nearbyAccess:'銀座駅・有楽町駅 徒歩圏内', related:['chuo','chiyoda','shinbashi'] },
+      shinbashi:   { name:'新橋・汐留', type:'station', lat:35.6657, lng:139.7586, propCount:9, avgPrice:15800, avgRating:4.79, img:'photo-1554995207-c18c203602cb', desc:'サラリーマンの街・新橋。汐留の高層ビル群。浜松町も近接。', nearbyAccess:'新橋駅 徒歩圏内', related:['minato','chuo','ginza'] },
+      oshiage:     { name:'押上・スカイツリー', type:'station', lat:35.7101, lng:139.8148, propCount:8, avgPrice:13200, avgRating:4.77, img:'photo-1556909114-f6e7ad7d3136', desc:'東京スカイツリーを望む下町エリア。浅草まで徒歩圏内。', nearbyAccess:'押上駅 徒歩圏内', related:['sumida','taito','asakusa'] },
+      // 東京23区
+      chiyoda:        { name:'千代田区', type:'ward', lat:35.6940, lng:139.7536, propCount:8,  avgPrice:20500, avgRating:4.85, img:'photo-1540959733332-eab4deabeeaf', desc:'皇居・丸の内・神田・秋葉原を含む都心中枢エリア。ビジネス需要が高い。', nearbyAccess:'各線 丸の内・神田エリア', related:['chuo','minato','tokyo'] },
+      chuo:           { name:'中央区', type:'ward', lat:35.6699, lng:139.7724, propCount:11, avgPrice:18800, avgRating:4.86, img:'photo-1484154218962-a197022b5858', desc:'銀座・築地・日本橋。グルメ・買い物・観光すべてが揃う。', nearbyAccess:'銀座・日本橋・築地エリア', related:['chiyoda','minato','ginza'] },
+      minato:         { name:'港区', type:'ward', lat:35.6581, lng:139.7514, propCount:19, avgPrice:23500, avgRating:4.90, img:'photo-1493976040374-85c8e12f0c0e', desc:'六本木・麻布・赤坂・品川。東京で最も国際色豊かなエリア。', nearbyAccess:'六本木・麻布・赤坂エリア', related:['chuo','shibuya-ku','roppongi'] },
+      'shinjuku-ku':  { name:'新宿区', type:'ward', lat:35.6938, lng:139.7036, propCount:24, avgPrice:16200, avgRating:4.84, img:'photo-1536376072261-38c75010e6c9', desc:'新宿・高田馬場・神楽坂。多彩な顔を持つ繁華区。', nearbyAccess:'新宿・高田馬場・神楽坂エリア', related:['shibuya-ku','toshima','shinjuku'] },
+      bunkyo:         { name:'文京区', type:'ward', lat:35.7081, lng:139.7521, propCount:7,  avgPrice:14500, avgRating:4.78, img:'photo-1528360983277-13d401cdc186', desc:'湯島天神・東京ドーム・根津神社。文教地区で落ち着いた雰囲気。', nearbyAccess:'後楽園・湯島・本郷エリア', related:['chiyoda','taito','kita'] },
+      taito:          { name:'台東区', type:'ward', lat:35.7134, lng:139.7813, propCount:15, avgPrice:13800, avgRating:4.81, img:'photo-1536676606629-17c91fb65ee6', desc:'浅草・上野・谷中。下町文化と観光スポットが凝縮。', nearbyAccess:'浅草・上野・谷中エリア', related:['sumida','bunkyo','asakusa'] },
+      sumida:         { name:'墨田区', type:'ward', lat:35.7101, lng:139.8012, propCount:12, avgPrice:13200, avgRating:4.79, img:'photo-1556909114-f6e7ad7d3136', desc:'東京スカイツリー・両国。下町情緒と現代観光が融合。', nearbyAccess:'押上・両国・錦糸町エリア', related:['taito','koto','oshiage'] },
+      koto:           { name:'江東区', type:'ward', lat:35.6722, lng:139.8171, propCount:9,  avgPrice:12500, avgRating:4.75, img:'photo-1551801691-f0bce83d4f68', desc:'有明・豊洲・門前仲町。湾岸エリアの新旧混在。', nearbyAccess:'豊洲・門前仲町・有明エリア', related:['sumida','edogawa','chuo'] },
+      'shinagawa-ku': { name:'品川区', type:'ward', lat:35.6090, lng:139.7300, propCount:13, avgPrice:16500, avgRating:4.80, img:'photo-1554995207-c18c203602cb', desc:'品川・大崎・武蔵小山。羽田空港アクセス最強エリア。', nearbyAccess:'品川・大崎・武蔵小山エリア', related:['ota','minato','shinagawa'] },
+      meguro:         { name:'目黒区', type:'ward', lat:35.6337, lng:139.6998, propCount:10, avgPrice:17800, avgRating:4.82, img:'photo-1522708323590-d24dbb6b0267', desc:'中目黒・自由が丘・学芸大学。おしゃれ感度高めの住宅地。', nearbyAccess:'中目黒・目黒・自由が丘エリア', related:['shibuya-ku','setagaya','shinagawa-ku'] },
+      ota:            { name:'大田区', type:'ward', lat:35.5614, lng:139.7160, propCount:8,  avgPrice:12800, avgRating:4.74, img:'photo-1528360983277-13d401cdc186', desc:'羽田空港エリア。蒲田・大森。空港利用に最も便利。', nearbyAccess:'蒲田・大森・羽田エリア', related:['shinagawa-ku','meguro','shinagawa'] },
+      setagaya:       { name:'世田谷区', type:'ward', lat:35.6467, lng:139.6531, propCount:14, avgPrice:16200, avgRating:4.83, img:'photo-1540959733332-eab4deabeeaf', desc:'三軒茶屋・下北沢・二子玉川。文化とグルメの豊かな住宅区。', nearbyAccess:'三軒茶屋・下北沢・二子玉川エリア', related:['meguro','suginami','shibuya-ku'] },
+      'shibuya-ku':   { name:'渋谷区', type:'ward', lat:35.6617, lng:139.7041, propCount:21, avgPrice:19500, avgRating:4.88, img:'photo-1522708323590-d24dbb6b0267', desc:'渋谷・原宿・表参道・代官山。トレンドの最前線。', nearbyAccess:'渋谷・原宿・代官山エリア', related:['minato','meguro','shibuya'] },
+      nakano:         { name:'中野区', type:'ward', lat:35.7074, lng:139.6636, propCount:6,  avgPrice:12500, avgRating:4.76, img:'photo-1536376072261-38c75010e6c9', desc:'中野ブロードウェイで有名。新宿に近く交通至便。', nearbyAccess:'中野・新中野エリア', related:['shinjuku-ku','suginami','toshima'] },
+      suginami:       { name:'杉並区', type:'ward', lat:35.6994, lng:139.6363, propCount:8,  avgPrice:13800, avgRating:4.77, img:'photo-1555685812-4b943f1cb0eb', desc:'高円寺・阿佐ヶ谷・荻窪。サブカルとジャズの街。', nearbyAccess:'高円寺・阿佐ヶ谷・荻窪エリア', related:['nakano','setagaya','nerima'] },
+      toshima:        { name:'豊島区', type:'ward', lat:35.7243, lng:139.7164, propCount:16, avgPrice:14500, avgRating:4.81, img:'photo-1536376072261-38c75010e6c9', desc:'池袋・巣鴨・駒込。池袋副都心を擁する活気ある区。', nearbyAccess:'池袋・巣鴨・駒込エリア', related:['nakano','kita','ikebukuro'] },
+      kita:           { name:'北区', type:'ward', lat:35.7528, lng:139.7334, propCount:5,  avgPrice:11800, avgRating:4.73, img:'photo-1536676606629-17c91fb65ee6', desc:'赤羽・王子・十条。下町的な温かみのある区。', nearbyAccess:'赤羽・王子・十条エリア', related:['toshima','arakawa','itabashi'] },
+      arakawa:        { name:'荒川区', type:'ward', lat:35.7361, lng:139.7826, propCount:4,  avgPrice:11200, avgRating:4.72, img:'photo-1536676606629-17c91fb65ee6', desc:'日暮里・三ノ輪・荒川遊園。下町の風情が残る区。', nearbyAccess:'日暮里・三ノ輪エリア', related:['taito','kita','adachi'] },
+      itabashi:       { name:'板橋区', type:'ward', lat:35.7506, lng:139.7093, propCount:6,  avgPrice:11500, avgRating:4.74, img:'photo-1555685812-4b943f1cb0eb', desc:'板橋・成増・東武練馬。都心へのアクセスもよい住宅区。', nearbyAccess:'板橋・成増・東武練馬エリア', related:['toshima','kita','nerima'] },
+      nerima:         { name:'練馬区', type:'ward', lat:35.7357, lng:139.6516, propCount:5,  avgPrice:11800, avgRating:4.73, img:'photo-1555685812-4b943f1cb0eb', desc:'石神井公園・大泉学園。自然豊かな住宅区。', nearbyAccess:'石神井公園・大泉学園エリア', related:['itabashi','suginami','nakano'] },
+      adachi:         { name:'足立区', type:'ward', lat:35.7752, lng:139.8044, propCount:4,  avgPrice:10500, avgRating:4.71, img:'photo-1536676606629-17c91fb65ee6', desc:'北千住・西新井。リーズナブルに泊まれる北東エリア。', nearbyAccess:'北千住・西新井エリア', related:['katsushika','arakawa','kita'] },
+      katsushika:     { name:'葛飾区', type:'ward', lat:35.7344, lng:139.8476, propCount:3,  avgPrice:10200, avgRating:4.70, img:'photo-1540959733332-eab4deabeeaf', desc:'柴又・亀有。下町の情緒たっぷり。寅さんの街。', nearbyAccess:'柴又・亀有・金町エリア', related:['adachi','edogawa','sumida'] },
+      edogawa:        { name:'江戸川区', type:'ward', lat:35.7070, lng:139.8680, propCount:4,  avgPrice:10800, avgRating:4.72, img:'photo-1540959733332-eab4deabeeaf', desc:'葛西・小岩・西葛西。ディズニー近くの穴場エリア。', nearbyAccess:'葛西・小岩・西葛西エリア', related:['katsushika','koto','adachi'] },
+    };
+
+    /* =====================================================
+       PROPERTY TEMPLATE POOL
+    ===================================================== */
+    const PROP_TEMPLATES = [
+      { suffix:'デザイナーズ 1LDK',    price_base:18500, rating:4.92, type:'1LDK',   img:'photo-1522708323590-d24dbb6b0267' },
+      { suffix:'モダンスタジオ',         price_base:13500, rating:4.85, type:'スタジオ', img:'photo-1586023492125-27b2c045efd7' },
+      { suffix:'タワー高層階アパート',   price_base:24000, rating:4.96, type:'1LDK',   img:'photo-1560448204-e02f11c3d0e2' },
+      { suffix:'和モダン古民家',         price_base:16800, rating:4.88, type:'1LDK',   img:'photo-1528360983277-13d401cdc186' },
+      { suffix:'ファミリー 2LDK',       price_base:28000, rating:4.90, type:'2LDK',   img:'photo-1484154218962-a197022b5858' },
+      { suffix:'コンパクトルーム',       price_base:10800, rating:4.78, type:'スタジオ', img:'photo-1536376072261-38c75010e6c9' },
+    ];
+
+    /* =====================================================
+       UTILITIES
+    ===================================================== */
+    function slugSeed(slug) {
+      let n = 0;
+      for (let i = 0; i < slug.length; i++) n = (n * 31 + slug.charCodeAt(i)) & 0xffffffff;
+      return Math.abs(n);
+    }
+
+    function priceWithVariance(base, seed, index) {
+      const factor = 1 + ((((seed * (index + 7)) % 300) - 150) / 1000);
+      return Math.round(base * factor / 100) * 100;
+    }
+
+    function fmt(n) {
+      return '¥' + n.toLocaleString('ja-JP');
+    }
+
+    /* 地図用ピン位置: 中心から半径~1km の8点をランダム配置 */
+    function pinPositions(lat, lng, seed) {
+      const positions = [];
+      for (let i = 0; i < 8; i++) {
+        const angle = (((seed * (i + 3)) % 628) / 100);
+        const dist  = 0.003 + (((seed * (i + 11)) % 700) / 1000000);
+        positions.push([
+          lat + dist * Math.sin(angle),
+          lng + dist * Math.cos(angle)
+        ]);
+      }
+      return positions;
+    }
+
+    /* =====================================================
+       RENDER AREA
+    ===================================================== */
+    function renderArea(slug, area) {
+      const seed = slugSeed(slug);
+      const content = document.getElementById('areaContent');
+
+      /* --- 1. Breadcrumb --- */
+      const breadcrumbHTML = `
+        <div class="breadcrumb">
+          <a href="index.html">ホーム</a>
+          <span>›</span>
+          <a href="area.html">エリアから探す</a>
+          <span>›</span>
+          ${area.name}
+        </div>`;
+
+      /* --- 2. Hero section --- */
+      const heroHTML = `
+        <div class="area-hero-detail">
+          <div class="area-hero-detail__copy">
+            <h1>${area.name}の民泊・宿泊施設</h1>
+            <p class="area-hero-detail__desc">${area.desc}</p>
+            <div class="area-stats">
+              <div class="area-stat">
+                <div class="area-stat__num">${area.propCount}件</div>
+                <div class="area-stat__label">掲載物件数</div>
+              </div>
+              <div class="area-stat">
+                <div class="area-stat__num">${fmt(area.avgPrice)}</div>
+                <div class="area-stat__label">平均宿泊料（1泊）</div>
+              </div>
+              <div class="area-stat">
+                <div class="area-stat__num">★ ${area.avgRating}</div>
+                <div class="area-stat__label">平均評価</div>
+              </div>
+            </div>
+            <div class="area-hero-detail__access">${area.nearbyAccess}</div>
+            <a href="search.html" class="btn btn--primary">このエリアの物件を探す</a>
+          </div>
+          <div class="area-hero-detail__img-wrap">
+            <img
+              src="https://images.unsplash.com/${area.img}?w=800&h=600&fit=crop"
+              alt="${area.name}のイメージ"
+              loading="lazy">
+          </div>
+        </div>`;
+
+      /* --- 3. Property cards (6枚) --- */
+      const propCardsHTML = PROP_TEMPLATES.map((tpl, i) => {
+        const price = priceWithVariance(tpl.price_base, seed, i);
+        return `
+          <a href="property-detail.html" class="prop-card" style="text-decoration:none;">
+            <div class="prop-card__img-wrap">
+              <img src="https://images.unsplash.com/${tpl.img}?w=600&h=400&fit=crop" alt="${area.name} ${tpl.suffix}" loading="lazy">
+            </div>
+            <div class="prop-card__body">
+              <div class="prop-card__type">${tpl.type}</div>
+              <div class="prop-card__title">${area.name} ${tpl.suffix}</div>
+              <div class="prop-card__footer">
+                <div class="prop-card__price">${fmt(price)} <span>/ 泊</span></div>
+                <div class="prop-card__rating">${tpl.rating}</div>
+              </div>
+            </div>
+          </a>`;
+      }).join('');
+
+      const propSectionHTML = `
+        <div class="detail-section">
+          <h2 class="detail-section__heading">${area.name}の人気物件</h2>
+          <div class="prop-grid-6">
+            ${propCardsHTML}
+          </div>
+        </div>`;
+
+      /* --- 4. Map section (rendered after DOM insert) --- */
+      const mapSectionHTML = `
+        <div class="map-section">
+          <h2 class="map-section__heading">${area.name}の物件マップ</h2>
+          <div id="areaMap"></div>
+        </div>`;
+
+      /* --- 5. Nearby areas --- */
+      const nearbyCardsHTML = area.related.map(function(relSlug) {
+        const rel = AREAS[relSlug];
+        if (!rel) return '';
+        return `
+          <a href="area-detail.html?slug=${relSlug}" class="nearby-card">
+            <div class="nearby-card__info">
+              <div class="nearby-card__name">${rel.name}</div>
+              <div class="nearby-card__count">${rel.propCount}件</div>
+            </div>
+            <div class="nearby-card__arrow">›</div>
+          </a>`;
+      }).join('');
+
+      const nearbySectionHTML = `
+        <div class="detail-section">
+          <h2 class="detail-section__heading">近隣エリアから探す</h2>
+          <div class="nearby-areas-grid">
+            ${nearbyCardsHTML}
+          </div>
+        </div>`;
+
+      /* --- 6. SEO text --- */
+      const seoHTML = `
+        <div class="area-seo-text">
+          <h2>${area.name}の民泊について</h2>
+          <p>${area.desc}　sumyca stayでは${area.name}エリアに${area.propCount}件の厳選された民泊・短期滞在物件を掲載しています。</p>
+          <p>平均宿泊料は1泊${fmt(area.avgPrice)}で、ゲストからの平均評価は${area.avgRating}と非常に高く、快適な滞在をお約束します。アクセス面では${area.nearbyAccess}に位置しており、観光・ビジネスどちらの目的にも最適です。</p>
+          <p>会員登録（無料）で全物件が常時15%オフになります。長期滞在割引や早期予約特典もご用意しています。sumyca stayで${area.name}の素晴らしい滞在をぜひ体験してください。</p>
+        </div>`;
+
+      /* --- Assemble & insert --- */
+      content.innerHTML =
+        breadcrumbHTML +
+        '<div style="background:var(--gray-1); margin-bottom:0;">' +
+          heroHTML +
+        '</div>' +
+        '<hr class="section-divider">' +
+        propSectionHTML +
+        '<hr class="section-divider">' +
+        mapSectionHTML +
+        '<hr class="section-divider">' +
+        nearbySectionHTML +
+        '<hr class="section-divider">' +
+        seoHTML;
+
+      /* --- Init Leaflet map --- */
+      initMap(area, seed);
+    }
+
+    /* =====================================================
+       LEAFLET MAP INIT
+    ===================================================== */
+    function initMap(area, seed) {
+      const map = L.map('areaMap', { scrollWheelZoom: false }).setView([area.lat, area.lng], 14);
+
+      L.tileLayer('https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png', {
+        attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> &copy; <a href="https://carto.com/">CARTO</a>',
+        subdomains: 'abcd',
+        maxZoom: 19
+      }).addTo(map);
+
+      const positions = pinPositions(area.lat, area.lng, seed);
+      const propPrices = PROP_TEMPLATES.map(function(tpl, i) {
+        return priceWithVariance(tpl.price_base, seed, i);
+      });
+
+      /* 8本のピン: 6枚のテンプレ＋2つ追加 */
+      const extraPrices = [
+        Math.round(area.avgPrice * 0.92 / 100) * 100,
+        Math.round(area.avgPrice * 1.08 / 100) * 100
+      ];
+      const allPrices = propPrices.concat(extraPrices);
+
+      positions.forEach(function(pos, i) {
+        const price = allPrices[i] || area.avgPrice;
+        const pinEl = document.createElement('div');
+        pinEl.className = 'map-pin';
+        pinEl.textContent = fmt(price);
+        const icon = L.divIcon({
+          html: pinEl.outerHTML,
+          className: '',
+          iconAnchor: [0, 0]
+        });
+        L.marker(pos, { icon: icon }).addTo(map);
+      });
+    }
+
+    /* =====================================================
+       LANG TOGGLE
+    ===================================================== */
+    function setLang(lang, btn) {
+      document.querySelectorAll('.lang-btn').forEach(function(b) { b.classList.remove('active'); });
+      // toggle all matching buttons (header + mobile)
+      document.querySelectorAll('.lang-btn').forEach(function(b) {
+        if (b.textContent.trim() === btn.textContent.trim()) b.classList.add('active');
+      });
+      document.documentElement.lang = lang;
+    }
+
+    /* =====================================================
+       INIT
+    ===================================================== */
+    (function init() {
+      const slug = new URLSearchParams(window.location.search).get('slug') || '';
+      const area = AREAS[slug];
+
+      if (!area) {
+        window.location.href = 'area.html';
+        return;
+      }
+
+      /* Dynamic title */
+      document.title = area.name + 'の民泊・短期滞在 | sumyca stay';
+
+      /* Render */
+      renderArea(slug, area);
+    })();
+  </script>
+</body>
+</html>

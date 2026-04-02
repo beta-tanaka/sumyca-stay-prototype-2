@@ -1,0 +1,543 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>建物詳細 | sumyca stay</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="css/style.css">
+  <style>
+    body { background: var(--gray-1); }
+    .bdetail-hero { background: var(--dark); color: var(--white); padding: 40px 24px 0; }
+    .bdetail-hero__inner { max-width: 1100px; margin: 0 auto; }
+    .bdetail-breadcrumb { font-size: 0.78rem; color: rgba(255,255,255,0.45); margin-bottom: 16px; }
+    .bdetail-breadcrumb a { color: rgba(255,255,255,0.6); text-decoration: none; }
+    .bdetail-breadcrumb a:hover { color: var(--white); }
+    .bdetail-hero__layout { display: grid; grid-template-columns: 1fr 440px; gap: 40px; align-items: end; padding-bottom: 40px; }
+    .bdetail-hero__badge { display: inline-block; background: var(--amber); color: var(--white); font-size: 0.7rem; font-weight: 800; padding: 3px 10px; border-radius: 10px; text-transform: uppercase; letter-spacing: 0.05em; margin-bottom: 12px; }
+    .bdetail-hero__name { font-size: clamp(1.75rem, 4vw, 3rem); font-weight: 900; letter-spacing: -0.03em; margin-bottom: 8px; }
+    .bdetail-hero__meta { display: flex; gap: 16px; flex-wrap: wrap; font-size: 0.875rem; color: rgba(255,255,255,0.65); }
+    .bdetail-hero__meta span { display: flex; align-items: center; gap: 4px; }
+    .bdetail-hero__img { border-radius: var(--r-lg,12px) var(--r-lg,12px) 0 0; overflow: hidden; height: 240px; }
+    .bdetail-hero__img img { width: 100%; height: 100%; object-fit: cover; }
+
+    .bdetail-main { max-width: 1100px; margin: 0 auto; padding: 40px 24px 80px; }
+    .bdetail-layout { display: grid; grid-template-columns: 1fr 300px; gap: 40px; align-items: start; }
+
+    .bdetail-about { background: var(--white); border-radius: var(--r-lg,12px); border: 1px solid var(--gray-2); padding: 28px; margin-bottom: 32px; }
+    .bdetail-about h2 { font-size: 1rem; font-weight: 800; margin-bottom: 12px; color: var(--dark); }
+    .bdetail-about p { font-size: 0.9rem; color: var(--gray-4); line-height: 1.75; }
+
+    .bdetail-rooms-header { display: flex; align-items: center; justify-content: space-between; margin-bottom: 20px; }
+    .bdetail-rooms-header h2 { font-size: 1.25rem; font-weight: 900; }
+    .bdetail-rooms-count { font-size: 0.875rem; color: var(--gray-3); font-weight: 700; }
+    .room-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(180px, 1fr)); gap: 12px; }
+    .room-card { background: var(--white); border: 1.5px solid var(--gray-2); border-radius: var(--r-md,8px); padding: 16px; text-decoration: none; color: inherit; display: block; transition: border-color 0.15s, box-shadow 0.15s, transform 0.15s; }
+    .room-card:hover { border-color: var(--teal); box-shadow: 0 4px 16px rgba(13,110,110,0.15); transform: translateY(-2px); }
+    .room-card--full { opacity: 0.6; }
+    .room-card--full:hover { border-color: var(--gray-2); box-shadow: none; transform: none; cursor: default; }
+    .room-card__num { font-size: 1.125rem; font-weight: 900; color: var(--dark); margin-bottom: 4px; }
+    .room-card__label { font-size: 0.72rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.04em; color: var(--gray-3); margin-bottom: 8px; }
+    .room-card__price { font-size: 0.875rem; font-weight: 800; color: var(--teal); }
+    .room-card__price span { font-size: 0.72rem; font-weight: 400; color: var(--gray-3); }
+    .room-card__avail { display: inline-block; font-size: 0.65rem; font-weight: 700; padding: 2px 6px; border-radius: 8px; margin-top: 4px; }
+    .room-card__avail--open { background: #dcfce7; color: #16a34a; }
+    .room-card__avail--full { background: var(--gray-1); color: var(--gray-3); }
+
+    .bdetail-sidebar { position: sticky; top: 20px; display: flex; flex-direction: column; gap: 16px; }
+    .sidebar-card { background: var(--white); border: 1px solid var(--gray-2); border-radius: var(--r-lg,12px); padding: 24px; }
+    .sidebar-card h3 { font-size: 0.875rem; font-weight: 800; margin-bottom: 16px; color: var(--dark); }
+    .stat-row { display: flex; align-items: center; justify-content: space-between; padding: 10px 0; border-bottom: 1px solid var(--gray-1); font-size: 0.875rem; }
+    .stat-row:last-child { border-bottom: none; }
+    .stat-row__label { color: var(--gray-3); font-weight: 600; }
+    .stat-row__value { font-weight: 800; color: var(--dark); }
+
+    .related-buildings h3 { font-size: 1rem; font-weight: 900; margin-bottom: 16px; }
+    .related-bcard { display: flex; gap: 12px; align-items: center; text-decoration: none; color: inherit; padding: 10px 0; border-bottom: 1px solid var(--gray-1); }
+    .related-bcard:last-child { border-bottom: none; }
+    .related-bcard__img { width: 56px; height: 56px; border-radius: 8px; object-fit: cover; flex-shrink: 0; }
+    .related-bcard__name { font-size: 0.8125rem; font-weight: 800; margin-bottom: 2px; line-height: 1.3; }
+    .related-bcard__meta { font-size: 0.72rem; color: var(--gray-3); }
+    .related-bcard:hover .related-bcard__name { color: var(--teal); }
+
+    .not-found { text-align: center; padding: 80px 24px; }
+    .not-found h2 { font-size: 1.5rem; font-weight: 900; margin-bottom: 12px; }
+    .not-found p { color: var(--gray-3); margin-bottom: 24px; }
+
+    @media(max-width: 900px) {
+      .bdetail-layout { grid-template-columns: 1fr; }
+      .bdetail-sidebar { position: static; }
+    }
+    @media(max-width: 768px) {
+      .bdetail-hero__layout { grid-template-columns: 1fr; }
+      .bdetail-hero__img { display: none; }
+      .room-grid { grid-template-columns: repeat(3, 1fr); }
+    }
+    @media(max-width: 480px) {
+      .room-grid { grid-template-columns: repeat(2, 1fr); }
+    }
+  </style>
+</head>
+<body>
+
+<div class="member-bar" style="background:var(--dark);color:var(--white);text-align:center;padding:10px 24px;font-size:0.75rem;font-weight:600;letter-spacing:0.04em;">直接予約が一番お得。会員登録で常時 15% オフ。<a href="#" style="color:#7DD8D8;text-decoration:underline;margin-left:8px;">無料で登録する →</a></div>
+<header class="header">
+  <div class="header__inner">
+    <a href="index.html" class="header__logo">sumyca <span>stay</span></a>
+          <nav class="header__nav">
+        <a href="search.html">物件を探す</a>
+        <a href="area.html">エリアから探す</a>
+        <a href="building.html">建物から探す</a>
+        <a href="my-trips.html">マイ予約</a>
+      </nav>
+    <div class="header__actions">
+      <div class="lang-toggle">
+        <button class="lang-btn active" onclick="setLang('ja',this)">JP</button>
+        <button class="lang-btn" onclick="setLang('en',this)">EN</button>
+      </div>
+      <a href="#" class="btn btn--outline btn--sm">ログイン</a>
+      <a href="#" class="btn btn--primary btn--sm">会員登録</a>
+      <button class="hamburger" onclick="document.getElementById('mobile-menu').classList.add('open')"><span></span><span></span><span></span></button>
+    </div>
+  </div>
+</header>
+<div class="mobile-menu" id="mobile-menu">
+  <button class="mobile-menu__close" onclick="document.getElementById('mobile-menu').classList.remove('open')">✕</button>
+  <div class="mobile-menu__logo">sumyca <span>stay</span></div>
+  <div class="mobile-menu__lang">
+    <button class="lang-btn active" onclick="setLang('ja',this)">JP</button>
+    <button class="lang-btn" onclick="setLang('en',this)">EN</button>
+  </div>
+      <nav class="mobile-menu__nav">
+      <a href="index.html">ホーム</a>
+      <a href="search.html">物件を探す</a>
+      <a href="area.html">エリアから探す</a>
+      <a href="building.html">建物から探す</a>
+      <a href="my-trips.html">マイ予約</a>
+    </nav>
+</div>
+
+<!-- Page content rendered by JS -->
+<div id="page-content"></div>
+
+<footer class="footer">
+  <div class="container">
+    <div class="footer__grid">
+      <div><div class="footer__brand">sumyca stay</div><p class="footer__desc">全国の厳選された民泊・宿泊施設を、スマートな体験とともにお届けします。</p></div>
+      <div class="footer__col"><h4>建物から探す</h4><a href="building.html">全建物一覧</a><a href="area-detail.html?slug=shinjuku">新宿エリア</a><a href="area-detail.html?slug=shibuya">渋谷エリア</a></div>
+      <div class="footer__col"><h4>サポート</h4><a href="#">ヘルプ</a><a href="#">お問い合わせ</a></div>
+      <div class="footer__col"><h4>会社情報</h4><a href="#">運営会社</a><a href="#">利用規約</a></div>
+    </div>
+    <div class="footer__bottom"><span>© 2026 sumyca stay. All rights reserved.</span></div>
+  </div>
+  <div class="footer__logo-giant">sumyca</div>
+</footer>
+
+<script>
+function setLang(lang,btn){document.querySelectorAll('.lang-btn').forEach(b=>b.classList.remove('active'));btn.classList.add('active');document.documentElement.lang=lang;}
+
+const BUILDINGS = [
+  // --- A ---
+  {slug:'airose-awajibashi', name:'AIROSE 淡路橋', area:'大阪', city:'osaka', station:'淡路橋', rooms:['201','301','302'], img:'photo-1522708323590-d24dbb6b0267'},
+  {slug:'alterna-ukimido', name:'ALTERNA 浮御堂', area:'大阪', city:'osaka', station:'浮御堂', rooms:['1103'], img:'photo-1560448204-e02f11c3d0e2'},
+  {slug:'alterna-akasaka', name:'ALTERNA 赤坂', area:'東京 赤坂', city:'tokyo', station:'赤坂', rooms:['1002','203','303','403','503','603','703','803','903'], img:'photo-1536376072261-38c75010e6c9'},
+  {slug:'ango-shibuya-i', name:'ANGO SHIBUYA I', area:'東京 渋谷', city:'tokyo', station:'渋谷', rooms:['1203'], img:'photo-1522708323590-d24dbb6b0267'},
+  {slug:'apro-stay-ikebukuro', name:'APRO STAY 池袋', area:'東京 池袋', city:'tokyo', station:'池袋', rooms:['101','201','202','301','302','401','402','501','502'], img:'photo-1555685812-4b943f1cb0eb'},
+  {slug:'apro-stay-ikebukuro-sakura', name:'APRO STAY 池袋 桜ヒルズ11', area:'東京 池袋', city:'tokyo', station:'池袋', rooms:['302','502','503'], img:'photo-1555685812-4b943f1cb0eb'},
+  {slug:'arm-ikebukuro', name:'ARM 池袋', area:'東京 池袋', city:'tokyo', station:'池袋', rooms:['101','102','201','202','301','302'], img:'photo-1536376072261-38c75010e6c9'},
+  {slug:'arucia-sangenjaya', name:'ARUCIA 三軒茶屋', area:'東京 三軒茶屋', city:'tokyo', station:'三軒茶屋', rooms:['101','102','201','202','301','302','401','402'], img:'photo-1540959733332-eab4deabeeaf'},
+  {slug:'arucia-komazawa', name:'ARUCIA 駒沢大学', area:'東京 駒沢大学', city:'tokyo', station:'駒沢大学', rooms:['101','201','301','401','501'], img:'photo-1528360983277-13d401cdc186'},
+  {slug:'asmaci-ryogoku-i', name:'ASMACI MAISON 両国 I', area:'東京 両国', city:'tokyo', station:'両国', rooms:['202','203','205'], img:'photo-1554995207-c18c203602cb'},
+  {slug:'astile-naniwa', name:'ASTILE 浪花', area:'大阪 難波', city:'osaka', station:'難波', rooms:['201','301','401','501','601','701','801','901'], img:'photo-1493976040374-85c8e12f0c0e'},
+  {slug:'axia', name:'AXIA', area:'東京', city:'tokyo', station:'未定', rooms:['402','702'], img:'photo-1560448204-e02f11c3d0e2'},
+  {slug:'azabu-artemis', name:'AZABU ARTEMIS', area:'東京 麻布', city:'tokyo', station:'麻布十番', rooms:['401','501','601','701','801','901'], img:'photo-1522708323590-d24dbb6b0267'},
+  {slug:'azest-rent-haneda', name:'AZEST-RENT 羽田11', area:'東京 羽田', city:'tokyo', station:'羽田空港', rooms:['101','102','103','201','202','203'], img:'photo-1528360983277-13d401cdc186'},
+  {slug:'access-tokyo', name:'Access 東京大塔', area:'東京', city:'tokyo', station:'東京', rooms:['102','202','203','301','302','304','305','402','501','505'], img:'photo-1484154218962-a197022b5858'},
+  {slug:'accueil-sasazuka', name:'Accueil SASAZUKA', area:'東京 笹塚', city:'tokyo', station:'笹塚', rooms:['203','302','303','602','702'], img:'photo-1540959733332-eab4deabeeaf'},
+  {slug:'angel-kafe', name:'Angel KAFE', area:'東京', city:'tokyo', station:'未定', rooms:['101','102','103','201','202','203','301','302','303','401','402'], img:'photo-1556909114-f6e7ad7d3136'},
+  {slug:'art-shin-osaka-west', name:'Art Shin-Osaka West', area:'大阪 新大阪', city:'osaka', station:'新大阪', rooms:['201','203','205','301','303','305','401','403','405','501','503','505','601','603','605','701','703','705','801','803','805'], img:'photo-1536376072261-38c75010e6c9'},
+  // --- B ---
+  {slug:'blue-hatsudai', name:'BLUE 初台', area:'東京 初台', city:'tokyo', station:'初台', rooms:['201','202','301','302','401','402','501','502','601','602','701','702','801','802'], img:'photo-1522708323590-d24dbb6b0267'},
+  {slug:'blue-shimanouchi', name:'BLUE 島之内', area:'大阪 島之内', city:'osaka', station:'心斎橋', rooms:['201','202','203','204','301','302','303','304','401','402','403','404','501','502','503','504','601','602','603','604','701','702','703','704','801','802','803','804'], img:'photo-1493976040374-85c8e12f0c0e'},
+  {slug:'brooklyn-hotel', name:'BROOKLYN HOTEL', area:'東京', city:'tokyo', station:'未定', rooms:['101','201','202','203','301','302','303','401','402','403','501','502','503'], img:'photo-1584622650111-993a426fbf0a'},
+  {slug:'bel-avenir', name:'Bel Avenir', area:'東京', city:'tokyo', station:'未定', rooms:['101','102','201','202','301','302','303','401','402','403'], img:'photo-1586023492125-27b2c045efd7'},
+  {slug:'bloom-kawagoe', name:'Bloom 川越', area:'埼玉 川越', city:'saitama', station:'川越', rooms:['101','102','103','105','201','202','203','205','301','302','303','305'], img:'photo-1528360983277-13d401cdc186'},
+  {slug:'bonheur-akasaka', name:'Bonheur Akasaka', area:'東京 赤坂', city:'tokyo', station:'赤坂', rooms:['101','201','301','401','501'], img:'photo-1522708323590-d24dbb6b0267'},
+  {slug:'brio-takatido', name:'Brio 高井戸', area:'東京 高井戸', city:'tokyo', station:'高井戸', rooms:['101','102','103','104','201','202','203','204','301','302','303','304','401','402','403'], img:'photo-1536376072261-38c75010e6c9'},
+  // --- C ---
+  {slug:'ch-residence-ryogoku', name:'CH RESIDENCE 両国', area:'東京 両国', city:'tokyo', station:'両国', rooms:['101','201','202','301','302','401','402','501','502'], img:'photo-1554995207-c18c203602cb'},
+  {slug:'ch-residence-tsukudajima', name:'CH RESIDENCE 九十九島', area:'東京 九十九島', city:'tokyo', station:'月島', rooms:['101','102','103','201','202','301','302','303','401','402','403','501','502'], img:'photo-1556909114-f6e7ad7d3136'},
+  {slug:'ch-residence-hashiinari', name:'CH RESIDENCE 橋稲荷鶴巻町', area:'東京 早稲田', city:'tokyo', station:'早稲田', rooms:['101','103','201','202','301','302','303','401','402','403','501','502'], img:'photo-1540959733332-eab4deabeeaf'},
+  {slug:'city-spire-shinkawa', name:'CITY SPIRE 新川', area:'東京 新川', city:'tokyo', station:'茅場町', rooms:['1002','1201','1202','301','401','404','503','801','901'], img:'photo-1484154218962-a197022b5858'},
+  {slug:'city-spire-ochiai', name:'CITY SPIRE 落合', area:'東京 落合', city:'tokyo', station:'落合', rooms:['1201','1301','1302','203','404','503'], img:'photo-1536376072261-38c75010e6c9'},
+  {slug:'city-spire-sakuragawa2', name:'CITY SPIRE 桜川II', area:'大阪 桜川', city:'osaka', station:'桜川', rooms:['1004','401','405','504','603'], img:'photo-1493976040374-85c8e12f0c0e'},
+  {slug:'city-spire-namba-west', name:'CITY SPIRE 難波WEST', area:'大阪 難波', city:'osaka', station:'難波', rooms:['1003','1005','405','509','705','707','708','804'], img:'photo-1493976040374-85c8e12f0c0e'},
+  {slug:'city-spire-namba-grace', name:'CITY SPIRE 難波グレイス', area:'大阪 難波', city:'osaka', station:'難波', rooms:['907'], img:'photo-1493976040374-85c8e12f0c0e'},
+  {slug:'class-ikebukuro', name:'CLASS 池袋', area:'東京 池袋', city:'tokyo', station:'池袋', rooms:['101','201','202','301','302','401','402','501','502'], img:'photo-1555685812-4b943f1cb0eb'},
+  {slug:'cantabile-meidaimae', name:'Cantabile Meidaimae', area:'東京 明大前', city:'tokyo', station:'明大前', rooms:['101','102','103','104','202','203','204','301','302','303','401','403','404','501'], img:'photo-1540959733332-eab4deabeeaf'},
+  {slug:'casa-toranomon', name:'Casa Toranomon', area:'東京 虎ノ門', city:'tokyo', station:'虎ノ門', rooms:['渚建'], img:'photo-1484154218962-a197022b5858'},
+  {slug:'city-oasis', name:'City Oasis', area:'東京', city:'tokyo', station:'未定', rooms:['101','102','201','202','301','302'], img:'photo-1522708323590-d24dbb6b0267'},
+  {slug:'culture-villa-haneda', name:'Culture villa HANEDA', area:'東京 羽田', city:'tokyo', station:'羽田空港', rooms:['SAKURA A 201','SAKURA B 202','UKIYOE A 301','UKIYOE B 302','ZEN A 101','ZEN B 102'], img:'photo-1528360983277-13d401cdc186'},
+  {slug:'curasion-oyodo', name:'Curasion 大淀中', area:'大阪 大淀', city:'osaka', station:'中津', rooms:['101','103','201','203','205','301','303','305','401','403','405','501','503','505','601','603','605','701','703','705'], img:'photo-1536376072261-38c75010e6c9'},
+  // --- D ---
+  {slug:'d-waseda', name:'D-WASEDA', area:'東京 早稲田', city:'tokyo', station:'早稲田', rooms:['101','102','103','201','202','301','302','303','401','402','403','501','502'], img:'photo-1540959733332-eab4deabeeaf'},
+  {slug:'daffitto-mitaka', name:'Daffitto 三鷹', area:'東京 三鷹', city:'tokyo', station:'三鷹', rooms:['404','405','406','408','409','504','506','507','509','510','511'], img:'photo-1555685812-4b943f1cb0eb'},
+  {slug:'daffitto-amakusa', name:'Daffitto 天津洲', area:'熊本', city:'kumamoto', station:'天草', rooms:['201','204','403'], img:'photo-1528360983277-13d401cdc186'},
+  {slug:'daffitto-naniwa-1', name:'Daffitto 浪花 I', area:'大阪 難波', city:'osaka', station:'難波', rooms:['101','102','103','201','202','203','204','205','206','207','208','209','210','301','302','303','304','305','306','307','308','309','310','401','402','403','404','405','406','407','408','409','410','501','502','503','504','505','506','507','508','509','510','601','602','603','604','605','606','607','608','609','610','701','702','703','704','705','706','707','708','709','710'], img:'photo-1493976040374-85c8e12f0c0e'},
+  {slug:'daffitto-naniwa-2', name:'Daffitto 浪花 II', area:'大阪 難波', city:'osaka', station:'難波', rooms:['201','202','203','204','205','301','302','303','304','305','401','402','403','404','405','501','502','503','504','505','601','602','603','604','605','701','702','703','704'], img:'photo-1493976040374-85c8e12f0c0e'},
+  {slug:'daffitto-hommachi', name:'Daffitto 本町後妻橋', area:'大阪 本町', city:'osaka', station:'本町', rooms:['201','202','203','204','301','302','303','304','401','402','403','404','501','502','503','504','601','602','603','604','701','702','703','704'], img:'photo-1493976040374-85c8e12f0c0e'},
+  {slug:'delccs-gomebashi', name:'DeLCCS 後女橋 III', area:'大阪', city:'osaka', station:'大阪', rooms:['202','402','501','502','601','602','701','702','801','802','901'], img:'photo-1536376072261-38c75010e6c9'},
+  {slug:'delccs-yamabuki', name:'DeLCCS 山吹神楽坂 III', area:'東京 神楽坂', city:'tokyo', station:'神楽坂', rooms:['204','301','302','304','401','501','503','504','602','604','701','802','803','901'], img:'photo-1540959733332-eab4deabeeaf'},
+  {slug:'delccs-kendai', name:'DeLCCS 見台', area:'大阪', city:'osaka', station:'大阪', rooms:['203','305','801'], img:'photo-1493976040374-85c8e12f0c0e'},
+  {slug:'delccs-koganji', name:'DeLCCS 高岩寺', area:'東京 巣鴨', city:'tokyo', station:'巣鴨', rooms:['702'], img:'photo-1555685812-4b943f1cb0eb'},
+  // --- E ---
+  {slug:'enraku-villa', name:'ENRAKU VILLA', area:'別荘地', city:'resort', station:'未定', rooms:['VILLA'], img:'photo-1528360983277-13d401cdc186'},
+  {slug:'exam-takadanobaba', name:'EXAM 高田馬場', area:'東京 高田馬場', city:'tokyo', station:'高田馬場', rooms:['102','103','301','302','401','402'], img:'photo-1536376072261-38c75010e6c9'},
+  {slug:'elm-takadanobaba', name:'Elm 高田馬場', area:'東京 高田馬場', city:'tokyo', station:'高田馬場', rooms:['101','102','103','104','105','106','107','108','109','110','111','112','113','114','115','116','117','118','119','120','121','201','202','203','204','205','206','207','208','209','210','301','302','303','304','305','306','307','308','309','310','401','402','403','404','405','406','407','408','409','410','501','502','503','504','505','506','507','508','509','510'], img:'photo-1536376072261-38c75010e6c9'},
+  {slug:'exentia-minamidai', name:'Exentia Minamidai', area:'東京 南台', city:'tokyo', station:'中野富士見町', rooms:['101','102','201','202','203','301','302','303','401','402','403'], img:'photo-1540959733332-eab4deabeeaf'},
+  // --- F ---
+  {slug:'f-studio-veronica', name:'F-studio VERONICA', area:'東京', city:'tokyo', station:'未定', rooms:['901'], img:'photo-1522708323590-d24dbb6b0267'},
+  {slug:'felice-morishita', name:'FELICE 森下', area:'東京 森下', city:'tokyo', station:'森下', rooms:['101','201','202','301','302','401','402','501','502'], img:'photo-1554995207-c18c203602cb'},
+  {slug:'fk-place-kagurazaka', name:'FK Place 神楽坂', area:'東京 神楽坂', city:'tokyo', station:'神楽坂', rooms:['101','102','103','104','105','201','202','203','301','302','303'], img:'photo-1540959733332-eab4deabeeaf'},
+  {slug:'fl-residence-jingumae', name:'FL レジデンス 神宮御苑 IV', area:'東京 原宿', city:'tokyo', station:'原宿', rooms:['101','102','103','201','202','203','204','301','302','303','304','401','402','403'], img:'photo-1522708323590-d24dbb6b0267'},
+  {slug:'ferio-hatsudai', name:'Ferio 初台', area:'東京 初台', city:'tokyo', station:'初台', rooms:['102','103','203','204','301','403','501','502','503'], img:'photo-1522708323590-d24dbb6b0267'},
+  {slug:'ferio-karidai', name:'Ferio 貫台', area:'東京 初台', city:'tokyo', station:'初台', rooms:['201','202','301','302','401','402','403','503'], img:'photo-1522708323590-d24dbb6b0267'},
+  {slug:'ferio-hatsudai-2', name:'Ferio 初台 II', area:'東京 初台', city:'tokyo', station:'初台', rooms:['101','102','201','202','203','301','302','303','401','402','403','501','502','503'], img:'photo-1522708323590-d24dbb6b0267'},
+  {slug:'ferio-hatsudai-3', name:'Ferio 初台 III', area:'東京 初台', city:'tokyo', station:'初台', rooms:['201','202','203','204','205','301','302','303','304','305','401','402','403','404'], img:'photo-1522708323590-d24dbb6b0267'},
+  {slug:'fruit-elegant', name:'Fruit Elegant', area:'東京', city:'tokyo', station:'未定', rooms:['101','102','201','202','301','302','401','402'], img:'photo-1586023492125-27b2c045efd7'},
+  // --- G ---
+  {slug:'glicion-koyasu', name:'GLICION 子安', area:'神奈川 子安', city:'kanagawa', station:'新子安', rooms:['101','102','201','202','301','302','401','402','501','502'], img:'photo-1528360983277-13d401cdc186'},
+  {slug:'gran-paseo-kagurazaka', name:'GRAN PASEO 神楽坂', area:'東京 神楽坂', city:'tokyo', station:'神楽坂', rooms:['101','102','104','202','205','301','306','403'], img:'photo-1540959733332-eab4deabeeaf'},
+  {slug:'gran-paseo-sasazuka', name:'GRAN PASEO 笹塚', area:'東京 笹塚', city:'tokyo', station:'笹塚', rooms:['0303'], img:'photo-1540959733332-eab4deabeeaf'},
+  {slug:'gran-paseo-koganji', name:'GRAN PASEO 高岩寺塔', area:'東京 巣鴨', city:'tokyo', station:'巣鴨', rooms:['303','307','404','504','604'], img:'photo-1555685812-4b943f1cb0eb'},
+  {slug:'grande-morishita', name:'GRANDE 森下', area:'東京 森下', city:'tokyo', station:'森下', rooms:['202','301','401','402','501','502','601','701','801','802'], img:'photo-1554995207-c18c203602cb'},
+  {slug:'gran-fusion-ikebukuro', name:'Gran Fusion 池袋', area:'東京 池袋', city:'tokyo', station:'池袋', rooms:['101','102','103','201','202','203','301','303','401','402','403'], img:'photo-1555685812-4b943f1cb0eb'},
+  // --- H ---
+  {slug:'harumi-flag-d', name:'HARUMI FLAG PORT VILLAGE D棟', area:'東京 晴海', city:'tokyo', station:'晴海', rooms:['1009','1010','1011','1012','1013','1014','1015','1016','1017','1018','1019','1020','1021','1022','1023','1024','1025','1026','1027'], img:'photo-1484154218962-a197022b5858'},
+  {slug:'hj-place-shibuya', name:'HJ PLACE SHIBUYA', area:'東京 渋谷', city:'tokyo', station:'渋谷', rooms:['101','102','201','202','203','301','302','303','401','402','403','501','502'], img:'photo-1522708323590-d24dbb6b0267'},
+  {slug:'haven-shibaura', name:'Haven Shibaura', area:'東京 芝浦', city:'tokyo', station:'田町', rooms:['1001','1002','1003','1101','1102','1201','1202','201','202','203','301','302','303','401','402','403','501','502','503','601','602','603','701','702','703','801','802','803','901','902','903'], img:'photo-1484154218962-a197022b5858'},
+  {slug:'heureux-nishi-shinjuku', name:'Heureux 西新宿', area:'東京 西新宿', city:'tokyo', station:'西新宿', rooms:['001','002','003','004','005','101','102','103','104','201','202','203','204','205','301','302','303','304','305'], img:'photo-1536376072261-38c75010e6c9'},
+  // --- I ---
+  {slug:'ion-shibuya-honmachi', name:'ION 渋谷本町', area:'東京 渋谷', city:'tokyo', station:'幡ヶ谷', rooms:['101','102','201','203','301','302','303','401','402'], img:'photo-1522708323590-d24dbb6b0267'},
+  {slug:'ihatov-komazawa', name:'Ihatov Komazawa', area:'東京 駒沢', city:'tokyo', station:'駒沢大学', rooms:['101','102','201','202','203','301','302','303','401','402','403'], img:'photo-1528360983277-13d401cdc186'},
+  // --- J ---
+  {slug:'js-court-ochiai', name:"J's コート 落合", area:'東京 落合', city:'tokyo', station:'中野坂上', rooms:['101','201','202','203','204','301','302','303','304','401','402','403','404'], img:'photo-1536376072261-38c75010e6c9'},
+  {slug:'jasper-waseda', name:'JASPER Waseda', area:'東京 早稲田', city:'tokyo', station:'早稲田', rooms:['101','102','201','202','301','302','401','402','501'], img:'photo-1540959733332-eab4deabeeaf'},
+  // --- K ---
+  {slug:'k-room', name:'K-room', area:'東京', city:'tokyo', station:'未定', rooms:['301','302','401'], img:'photo-1522708323590-d24dbb6b0267'},
+  {slug:'kaigan-hajime-hub', name:'KAIGAN HAJIME HUB', area:'東京 海岸', city:'tokyo', station:'浜松町', rooms:['401'], img:'photo-1484154218962-a197022b5858'},
+  {slug:'kc-iii', name:'KC-III', area:'東京', city:'tokyo', station:'未定', rooms:['101','102','103','104','105','201','202','203','204','205','301','302','303'], img:'photo-1540959733332-eab4deabeeaf'},
+  {slug:'kisetsu-omori-1', name:'KISETSU 大森 I', area:'東京 大森', city:'tokyo', station:'大森', rooms:['102','201','202','203','205','206','301','302','305','306','401','405','406'], img:'photo-1528360983277-13d401cdc186'},
+  {slug:'kisetsu-omori-2', name:'KISETSU 大森 II', area:'東京 大森', city:'tokyo', station:'大森', rooms:['101','201','202','203','301','302','303','401','402','403','501','502','503'], img:'photo-1528360983277-13d401cdc186'},
+  {slug:'kisetsu-sugamo', name:'KISETSU 巣鴨', area:'東京 巣鴨', city:'tokyo', station:'巣鴨', rooms:['101','102','201','202','301','302','401','402','403','501','502'], img:'photo-1555685812-4b943f1cb0eb'},
+  {slug:'kisetsu-hashiinari-1', name:'KISETSU 橋稲荷 I', area:'東京 早稲田', city:'tokyo', station:'早稲田', rooms:['101','102','105','106','201','202','203','204','205','206','301','302','303','304','305','306','401','402','403','404','405','406','501','502','503','504'], img:'photo-1540959733332-eab4deabeeaf'},
+  {slug:'kisetsu-hashiinari-2', name:'KISETSU 橋稲荷 II', area:'東京 早稲田', city:'tokyo', station:'早稲田', rooms:['101','102','201','202','203','301','302','303','401','403'], img:'photo-1540959733332-eab4deabeeaf'},
+  {slug:'kisetsu-kagurazaka', name:'KISETSU 神楽坂', area:'東京 神楽坂', city:'tokyo', station:'神楽坂', rooms:['1001','101','102','201','301','303','401','402','403','501','502','503','601','602','603','701','702','703','801','802','901','902'], img:'photo-1540959733332-eab4deabeeaf'},
+  // --- L ---
+  {slug:'l-flat-hakusan', name:'L-Flat 白山', area:'東京 白山', city:'tokyo', station:'白山', rooms:['404'], img:'photo-1536376072261-38c75010e6c9'},
+  {slug:'lafesta-higashiekimae', name:'LAFESTA 東駅前', area:'東京', city:'tokyo', station:'東京', rooms:['201','202','203','301','302','303','401','402','403','501','502','503','601','602','603','701','702'], img:'photo-1484154218962-a197022b5858'},
+  {slug:'legaland-sangenjaya-annex', name:'LEGALAND 三軒茶屋 ANNEX', area:'東京 三軒茶屋', city:'tokyo', station:'三軒茶屋', rooms:['101','102','103','201','202','301','304','401','402','403','404'], img:'photo-1540959733332-eab4deabeeaf'},
+  {slug:'legaland-gakushuin', name:'LEGALAND 学習院下', area:'東京 学習院下', city:'tokyo', station:'学習院下', rooms:['101','102','201','202','203','204','301','302','303','304','401','402','403','404'], img:'photo-1536376072261-38c75010e6c9'},
+  {slug:'legaland-hatagaya', name:'LEGALAND 幡ヶ谷', area:'東京 幡ヶ谷', city:'tokyo', station:'幡ヶ谷', rooms:['101','102','103','104','201','402','403'], img:'photo-1522708323590-d24dbb6b0267'},
+  {slug:'legaland-hatagaya-annex', name:'LEGALAND 幡ヶ谷 ANNEX', area:'東京 幡ヶ谷', city:'tokyo', station:'幡ヶ谷', rooms:['101','102','103','104','201','202','203','205','301','302','303','401','404'], img:'photo-1522708323590-d24dbb6b0267'},
+  {slug:'legend-court-hoosen', name:'LEGEND COURT 法泉', area:'東京 法泉', city:'tokyo', station:'沼袋', rooms:['101','102','201','202','203','301','302','303','401','402'], img:'photo-1540959733332-eab4deabeeaf'},
+  {slug:'link-court-nishi-shinjuku', name:'LINK COURT 西新宿', area:'東京 西新宿', city:'tokyo', station:'西新宿', rooms:['101','102','103','201','202','203','301','302','303'], img:'photo-1536376072261-38c75010e6c9'},
+  {slug:'luna-ryogoku', name:'LUNA 両国', area:'東京 両国', city:'tokyo', station:'両国', rooms:['101','102','201','202','301','302','401','402'], img:'photo-1554995207-c18c203602cb'},
+  {slug:'luxe-yakumo', name:'LUXE 八雲山', area:'東京 八雲', city:'tokyo', station:'都立大学', rooms:['201','202','301','302','401'], img:'photo-1528360983277-13d401cdc186'},
+  {slug:'lasante-umedakita', name:'LaSante UMEDAKITA', area:'大阪 梅田', city:'osaka', station:'梅田', rooms:['201','204','206','301','302','305'], img:'photo-1536376072261-38c75010e6c9'},
+  {slug:'lavie-hatsudai', name:'LaVie 初台', area:'東京 初台', city:'tokyo', station:'初台', rooms:['101','102','103','201','202','203','301','302','303'], img:'photo-1522708323590-d24dbb6b0267'},
+  {slug:'lavie-hatsutani', name:'LaVie 初谷', area:'東京', city:'tokyo', station:'初台', rooms:['101','102','201','202','203','204','301','302','303','401','402'], img:'photo-1522708323590-d24dbb6b0267'},
+  {slug:'lagrace-akane', name:'La·grace Akane', area:'東京', city:'tokyo', station:'未定', rooms:['201','202'], img:'photo-1540959733332-eab4deabeeaf'},
+  {slug:'livecasa-ryogoku-1', name:'Livecasa 両国 I', area:'東京 両国', city:'tokyo', station:'両国', rooms:['101','201','301','302','401','501','502','601','602'], img:'photo-1554995207-c18c203602cb'},
+  {slug:'livion-iii', name:'Livion III', area:'東京', city:'tokyo', station:'未定', rooms:['101','102','201','202','301','302'], img:'photo-1536376072261-38c75010e6c9'},
+  // --- M ---
+  {slug:'mat-araiyakushi-east', name:'MAT ARAIYAKUSHI EAST', area:'東京 新井薬師', city:'tokyo', station:'新井薬師前', rooms:['102','202','401','501'], img:'photo-1540959733332-eab4deabeeaf'},
+  {slug:'mat-araiyakushi-west', name:'MAT ARAIYAKUSHI WEST', area:'東京 新井薬師', city:'tokyo', station:'新井薬師前', rooms:['201','203','501'], img:'photo-1540959733332-eab4deabeeaf'},
+  {slug:'mat-hikifune', name:'MAT HIKIFUNE', area:'東京 曳舟', city:'tokyo', station:'曳舟', rooms:['101','201','202','301','302','401','402','501','502','601','602','701','702','801','802','901','902'], img:'photo-1556909114-f6e7ad7d3136'},
+  {slug:'mat-osaka-nagara', name:'MAT OSAKA NAGARA', area:'大阪', city:'osaka', station:'長柄橋', rooms:['101','102','103','104','105','201','202','203','204','205','206','301','302','303','304','305','306','401','402','403','404','405','406','501','502','503','504','505','506','601','602','603','604','605','606'], img:'photo-1493976040374-85c8e12f0c0e'},
+  {slug:'mat-oshiage', name:'MAT OSHIAGE', area:'東京 押上', city:'tokyo', station:'押上', rooms:['1001','1002','1003','201','202','301','302','303','304','401','402','403','404','501','502','503','504','601','602','603','604','701','702','703','704','801','802','803','804','901','902','903'], img:'photo-1556909114-f6e7ad7d3136'},
+  {slug:'mat-oshiage-2', name:'MAT OSHIAGE II', area:'東京 押上', city:'tokyo', station:'押上', rooms:['101','102','103','201','202','203','204','301','302','303','304','401','402','403','404','501','502','503'], img:'photo-1556909114-f6e7ad7d3136'},
+  {slug:'mat-ryogoku', name:'MAT RYOGOKU', area:'東京 両国', city:'tokyo', station:'両国', rooms:['1001','1002','1003','202','203','301','302','303','401','402','403','501','502','503','601','602','701','702','703','801','802','803','901','902','903'], img:'photo-1554995207-c18c203602cb'},
+  {slug:'mat-shibuyahonmachi', name:'MAT SHIBUYAHONMACHI', area:'東京 渋谷', city:'tokyo', station:'幡ヶ谷', rooms:['101','102','103','201','202','203','204','301','302','303','304','401','402','403','404'], img:'photo-1522708323590-d24dbb6b0267'},
+  {slug:'mat-nakaochiai', name:'MAT 中落合', area:'東京 中落合', city:'tokyo', station:'落合', rooms:['203','204','304','305','401','402','403','406','504','602','706','707','805','806'], img:'photo-1536376072261-38c75010e6c9'},
+  {slug:'mat-naniwa', name:'MAT 難波', area:'大阪 難波', city:'osaka', station:'難波', rooms:['101','102','103','201','202','301','302','401','402','501','502'], img:'photo-1493976040374-85c8e12f0c0e'},
+  {slug:'ms-kagurazaka', name:'MS I Kagurazaka', area:'東京 神楽坂', city:'tokyo', station:'神楽坂', rooms:['301','302','401','402'], img:'photo-1540959733332-eab4deabeeaf'},
+  {slug:'miyabi-kagurazaka', name:'Miyabi 神楽坂', area:'東京 神楽坂', city:'tokyo', station:'神楽坂', rooms:['1001','201','202','301','302','401','501','601','701','801','901'], img:'photo-1540959733332-eab4deabeeaf'},
+  // --- N ---
+  {slug:'nozy-nihonbashi', name:'NOZY NIHONBASHI', area:'東京 日本橋', city:'tokyo', station:'日本橋', rooms:['1001','201','301','302','401','501','502','601','701','702','801','901','902'], img:'photo-1484154218962-a197022b5858'},
+  {slug:'noble-park-kinshicho', name:'Noble Park KINSHICHO', area:'東京 錦糸町', city:'tokyo', station:'錦糸町', rooms:['201','202','203','301','302','303','401','402','403','501','502','503','601','602','603','701','702','703','801','802','803','901','902','903'], img:'photo-1554995207-c18c203602cb'},
+  {slug:'noble-park-ryogoku', name:'Noble Park RYOGOKU', area:'東京 両国', city:'tokyo', station:'両国', rooms:['1001','201','202','302','403','501','502','503','601','702','801','802','803','804'], img:'photo-1554995207-c18c203602cb'},
+  // --- P ---
+  {slug:'paseo-shibuya-sasazuka-1', name:'PASEO 渋谷笹塚 I', area:'東京 笹塚', city:'tokyo', station:'笹塚', rooms:['101','102','103','104'], img:'photo-1540959733332-eab4deabeeaf'},
+  {slug:'paseo-shibuya-sasazuka-2', name:'PASEO 渋谷笹塚 II', area:'東京 笹塚', city:'tokyo', station:'笹塚', rooms:['101','102','103','104','201'], img:'photo-1540959733332-eab4deabeeaf'},
+  {slug:'pl-park-lane-shirogane', name:'PL Park Lane 白根高輪', area:'東京 高輪', city:'tokyo', station:'白金高輪', rooms:['201','202','301','302','401','502','601','701','801'], img:'photo-1484154218962-a197022b5858'},
+  {slug:'popfire-town', name:'POPFIRE TOWN', area:'東京', city:'tokyo', station:'未定', rooms:['01','02','03','04','ALL'], img:'photo-1555685812-4b943f1cb0eb'},
+  {slug:'preas-nakaono', name:'PREAS 中尾新台', area:'東京', city:'tokyo', station:'中野', rooms:['101','203','204','302','305','402','403','404','405','502'], img:'photo-1536376072261-38c75010e6c9'},
+  {slug:'preas-omori-yamakawa', name:'PREAS 大森山川', area:'東京 大森', city:'tokyo', station:'大森', rooms:['201','202','301','302','401','402','501','502','601','602','701','702','801','901'], img:'photo-1528360983277-13d401cdc186'},
+  {slug:'preas-itomachi', name:'PREAS 糸町', area:'東京', city:'tokyo', station:'森下', rooms:['101','201','202','203','301','302','303','401','402','501','502','601','602','701','702'], img:'photo-1554995207-c18c203602cb'},
+  // --- R ---
+  {slug:'rebanga-ueno', name:'REBANGA 上野アパートメント', area:'東京 上野', city:'tokyo', station:'上野', rooms:['202','502','602','702','901'], img:'photo-1528360983277-13d401cdc186'},
+  {slug:'rej-louvre-ukimido', name:'REJ ルーブル 浮御堂', area:'大阪', city:'osaka', station:'大阪', rooms:['201','203','302','401','403','405'], img:'photo-1493976040374-85c8e12f0c0e'},
+  {slug:'recorrido-yoyogi', name:'Recorrido Yoyogi', area:'東京 代々木', city:'tokyo', station:'代々木', rooms:['101','102','201','202','301','302','401','402'], img:'photo-1522708323590-d24dbb6b0267'},
+  {slug:'retaw-hills-waseda', name:'Retaw Hills WASEDA', area:'東京 早稲田', city:'tokyo', station:'早稲田', rooms:['101','102','201','202','301','302','401','402','501','502'], img:'photo-1540959733332-eab4deabeeaf'},
+  {slug:'ritzy-ikebukuro', name:'Ritzy 池袋', area:'東京 池袋', city:'tokyo', station:'池袋', rooms:['101','102','103','201','202','203','301','302','303'], img:'photo-1555685812-4b943f1cb0eb'},
+  {slug:'ruygo-nishi-ochiai', name:'Ruygo 新宿西落合', area:'東京 落合', city:'tokyo', station:'西落合', rooms:['102','201','202','301','302','401','502','602'], img:'photo-1536376072261-38c75010e6c9'},
+  // --- S ---
+  {slug:'sk-mansion', name:'S-K MANSION', area:'東京', city:'tokyo', station:'未定', rooms:['103','104','203','204','302','402','404','501'], img:'photo-1522708323590-d24dbb6b0267'},
+  {slug:'s-residence-namba-admirio', name:'S-RESIDENCE 大阪難波 admirio', area:'大阪 難波', city:'osaka', station:'難波', rooms:['201','202','203','301','302','303','401','402','403','501','502','503','601','602','603','701','702','703'], img:'photo-1493976040374-85c8e12f0c0e'},
+  {slug:'s-residence-kitayama', name:'S-RESIDENCE 北山鳥居坂', area:'東京 麻布', city:'tokyo', station:'麻布十番', rooms:['1001','201','202','301','302','401','402','501','502','601','602','701','702'], img:'photo-1484154218962-a197022b5858'},
+  {slug:'seed-yatsu', name:'SEED 谷津子一丁', area:'千葉 谷津', city:'chiba', station:'谷津', rooms:['101','201','301'], img:'photo-1528360983277-13d401cdc186'},
+  {slug:'stand-hotel-shimbashi', name:'STAND HOTEL SHIMBASHI', area:'東京 新橋', city:'tokyo', station:'新橋', rooms:['10F'], img:'photo-1484154218962-a197022b5858'},
+  {slug:'sky-kinshicho', name:'Sky Kinshicho', area:'東京 錦糸町', city:'tokyo', station:'錦糸町', rooms:['1002','301','302','303','401','403','501','502','503','601','602','603','701','702','703','801','802','803','901','902','903'], img:'photo-1554995207-c18c203602cb'},
+  {slug:'sun-place-kagurazaka', name:'Sun Place 神楽坂', area:'東京 神楽坂', city:'tokyo', station:'神楽坂', rooms:['401','402','403','501','502','503','601','602','603','701','702','703'], img:'photo-1540959733332-eab4deabeeaf'},
+  // --- T ---
+  {slug:'t-flat-namba-west', name:'T-FLAT NAMBA WEST', area:'大阪 難波', city:'osaka', station:'難波', rooms:['602','604','705','905'], img:'photo-1493976040374-85c8e12f0c0e'},
+  {slug:'t-flat-sasazuka', name:'T-FLAT SASAZUKA', area:'東京 笹塚', city:'tokyo', station:'笹塚', rooms:['103','105','213','403','406','408','411','507'], img:'photo-1540959733332-eab4deabeeaf'},
+  {slug:'t-flat-shinjuku-toyama', name:'T-FLAT SHINJUKU TOYAMA', area:'東京 新宿', city:'tokyo', station:'新宿', rooms:['202','403','406','505','601'], img:'photo-1536376072261-38c75010e6c9'},
+  {slug:'teto-hashiinari', name:'TETO 橋稲荷', area:'東京 早稲田', city:'tokyo', station:'早稲田', rooms:['4F','5F','6F','7F','8F','9F'], img:'photo-1540959733332-eab4deabeeaf'},
+  {slug:'the-contrail-ebisu', name:'THE CONTRAIL EBISU', area:'東京 恵比寿', city:'tokyo', station:'恵比寿', rooms:['101','201','202','204','301','303','304','401','402','404'], img:'photo-1522708323590-d24dbb6b0267'},
+  {slug:'the-dorchester-alpha', name:'THE Dorchester α', area:'東京', city:'tokyo', station:'未定', rooms:['101','102','201','202','203','301','302','303','401','402','403'], img:'photo-1484154218962-a197022b5858'},
+  {slug:'the-dorchester-beta', name:'THE Dorchester β', area:'東京', city:'tokyo', station:'未定', rooms:['101','102','201','202','203','301','302','303','401','402','403'], img:'photo-1484154218962-a197022b5858'},
+  {slug:'the-gatehouse-sakasamabashi', name:'THE GATEHOUSE 逆橋谷', area:'東京', city:'tokyo', station:'未定', rooms:['1001','1002','1003','1004','1005','401','403','404','405','501','502','503','504','505','601','603','605','702','703','801','802','804','805','901','902','903','904','905'], img:'photo-1536376072261-38c75010e6c9'},
+  {slug:'tokyo-sunshine-tower', name:'TOKYO SUNSHINE TOWER', area:'東京', city:'tokyo', station:'池袋', rooms:['301','302','303'], img:'photo-1555685812-4b943f1cb0eb'},
+  {slug:'trym-naniwa', name:'TRYM 浪花', area:'大阪 難波', city:'osaka', station:'難波', rooms:['101','102','201','202','203','301','302','303','401','402','403'], img:'photo-1493976040374-85c8e12f0c0e'},
+  {slug:'the-parkcross-ryogoku', name:'The Parkcross 両国緑', area:'東京 両国', city:'tokyo', station:'両国', rooms:['201','202','203','301','302','303','401','402','403','501','502','503','601','602','603','701','702','703','801','802','803','901','902','903'], img:'photo-1554995207-c18c203602cb'},
+  {slug:'the-parkcross-arakawa', name:'The Parkcross 荒川', area:'東京 荒川', city:'tokyo', station:'荒川', rooms:['201','202','203','204','301','302','303','304','401','402','403','404','501','502','503','504','601','602','603','604','701','702','703'], img:'photo-1536676606629-17c91fb65ee6'},
+  {slug:'the-sanctus-ukimido', name:'The Sanctus 浮御堂', area:'大阪', city:'osaka', station:'大阪', rooms:['101','102','103','104','105','201','202','203','204','205','206','301','302','303','304','305','306','401','402','403','404','405','406'], img:'photo-1493976040374-85c8e12f0c0e'},
+  {slug:'toggle-bunkyo-korakuen', name:'toggle BUNKYO KORAKUEN', area:'東京 文京', city:'tokyo', station:'後楽園', rooms:['101','102','201','202','203','301','302','303','401','402'], img:'photo-1540959733332-eab4deabeeaf'},
+  {slug:'tokyo-shirokane-stays', name:'Tokyo Shirokane Stays', area:'東京 白金', city:'tokyo', station:'白金台', rooms:['全室'], img:'photo-1484154218962-a197022b5858'},
+  {slug:'totsu-residence-shiodome', name:'Totsu Residence Shiodome', area:'東京 汐留', city:'tokyo', station:'汐留', rooms:['703','903'], img:'photo-1484154218962-a197022b5858'},
+  // --- U ---
+  {slug:'uvas-ikebukuro', name:'UVAS 池袋', area:'東京 池袋', city:'tokyo', station:'池袋', rooms:['0102','0105','0106','0107','0108','0202','0203','0207'], img:'photo-1555685812-4b943f1cb0eb'},
+  // --- V ---
+  {slug:'value-maison-kagurazaka', name:'VALUE MAISON kagurazaka', area:'東京 神楽坂', city:'tokyo', station:'神楽坂', rooms:['102','201','202','301','302','401','402','501','502'], img:'photo-1540959733332-eab4deabeeaf'},
+  {slug:'via-lattea-chugai', name:'VIA LATTEA 忠実', area:'東京', city:'tokyo', station:'未定', rooms:['403','406','407','409','410','504','506','507'], img:'photo-1522708323590-d24dbb6b0267'},
+  {slug:'villa-sakura-meguro', name:'VILLA SAKURA 東京目黒', area:'東京 目黒', city:'tokyo', station:'目黒', rooms:['101','102','103','105','201','202','203','206','207','208','210','302','303','307','308'], img:'photo-1522708323590-d24dbb6b0267'},
+  {slug:'villa-sakura-toyota', name:'VILLA SAKURA 豊田調布市', area:'東京 調布', city:'tokyo', station:'調布', rooms:['EAST','WEST'], img:'photo-1528360983277-13d401cdc186'},
+  {slug:'villa-sakura-ashino-su', name:'VILLA SAKURA 葦の巣 II 窪館', area:'東京', city:'tokyo', station:'未定', rooms:['101','103','105','106','107','201','203','206','207','208','302','303','305','306','307'], img:'photo-1528360983277-13d401cdc186'},
+  {slug:'villettina-urayasu', name:'VILLETTINA 浦安', area:'千葉 浦安', city:'chiba', station:'浦安', rooms:['201','203','301','302','303','401','402','403','501','502','503'], img:'photo-1528360983277-13d401cdc186'},
+  {slug:'verde-ikebukuro', name:'Verde 池袋', area:'東京 池袋', city:'tokyo', station:'池袋', rooms:['101','102','103','104','201','202','203','204','301','302','303'], img:'photo-1555685812-4b943f1cb0eb'},
+  // --- W ---
+  {slug:'willows-minpaku', name:'Willows Minpaku', area:'東京', city:'tokyo', station:'未定', rooms:['101','201','301','401'], img:'photo-1586023492125-27b2c045efd7'},
+  {slug:'wind-bell-umezu', name:'Wind Bell 梅坦', area:'京都 梅津', city:'kyoto', station:'梅津', rooms:['101','102','201','202','203','301','302','303','401','402','403','501','502','503','601','602','603','701','702','703','801','802','803'], img:'photo-1528360983277-13d401cdc186'},
+  {slug:'wresidence', name:'Wresidence', area:'東京', city:'tokyo', station:'未定', rooms:['23D','26A','26C'], img:'photo-1484154218962-a197022b5858'},
+  // --- a ---
+  {slug:'alato-mitadani', name:'aLATO 三田谷', area:'東京 三田', city:'tokyo', station:'三田', rooms:['101','201','202','203','301','302','303','401','402','403','501','502'], img:'photo-1484154218962-a197022b5858'},
+  {slug:'alato-hatsudai', name:'aLATO 初台', area:'東京 初台', city:'tokyo', station:'初台', rooms:['101','102','201','202','301','302','401','402','501','502'], img:'photo-1522708323590-d24dbb6b0267'},
+  {slug:'alato-omorimachi', name:'aLATO 大森町', area:'東京 大森', city:'tokyo', station:'大森', rooms:['101','102','103','104','105','106','201','202','203','204','205','206','207'], img:'photo-1528360983277-13d401cdc186'},
+  {slug:'alato-itomachi', name:'aLATO 糸町', area:'東京 森下', city:'tokyo', station:'森下', rooms:['201','202','203','301','302','401','402','403','501','502','601','602'], img:'photo-1554995207-c18c203602cb'},
+  {slug:'at-kyobashi', name:'at Kyobashi', area:'東京 京橋', city:'tokyo', station:'京橋', rooms:['101','102','103','105','201','202','203','205','301','302','303','305'], img:'photo-1484154218962-a197022b5858'},
+  {slug:'belle-ville-kagurazaka', name:'belle ville 神楽坂', area:'東京 神楽坂', city:'tokyo', station:'神楽坂', rooms:['101','102','103','104','105'], img:'photo-1540959733332-eab4deabeeaf'},
+  {slug:'lighthouse-otsuka', name:'lighthouse otsuka', area:'東京 大塚', city:'tokyo', station:'大塚', rooms:['1001','1204','305','401','405'], img:'photo-1555685812-4b943f1cb0eb'},
+  {slug:'skye-yushima', name:'skye yushima', area:'東京 湯島', city:'tokyo', station:'湯島', rooms:['301','401','501'], img:'photo-1540959733332-eab4deabeeaf'},
+  {slug:'stayme-hotel-mitsuhashi', name:'stayme THE HOTEL 三橋駅前', area:'埼玉 三橋', city:'saitama', station:'西大宮', rooms:['1001','1002','101','1101','1102','1103','1201','1202','201','202','203','301','302','303','401','402','403','501','502','503','601','602','603','701','702','703','801','802','803','901','902'], img:'photo-1536376072261-38c75010e6c9'},
+  {slug:'stayme-hotel-asakusa', name:'stayme THE HOTEL 浅草リバーサイド', area:'東京 浅草', city:'tokyo', station:'浅草', rooms:['1001','1003','1004','1101','1103','1104','1201','201','202','203','204','301','302','303','304','401','402','403','404','501','502','503','504','601','602','603','604','701','702','703','704','801','802','803','804','901','902','903','904'], img:'photo-1536676606629-17c91fb65ee6'},
+];
+
+// Seeded pseudo-random number generator (mulberry32)
+function seededRandom(seed) {
+  return function() {
+    seed |= 0; seed = seed + 0x6D2B79F5 | 0;
+    var t = Math.imul(seed ^ seed >>> 15, 1 | seed);
+    t = t + Math.imul(t ^ t >>> 7, 61 | t) ^ t;
+    return ((t ^ t >>> 14) >>> 0) / 4294967296;
+  };
+}
+
+function slugToSeed(slug) {
+  let h = 0;
+  for (let i = 0; i < slug.length; i++) {
+    h = Math.imul(31, h) + slug.charCodeAt(i) | 0;
+  }
+  return h;
+}
+
+function getRoomType(roomNum) {
+  const n = String(roomNum);
+  const floor = parseInt(n, 10);
+  if (isNaN(floor)) return 'Studio';
+  const lastTwo = n.slice(-2);
+  const num = parseInt(lastTwo, 10);
+  if (num <= 2) return 'Studio';
+  if (num <= 4) return '1K';
+  if (num <= 6) return '1DK';
+  if (num <= 8) return '1LDK';
+  return '1K';
+}
+
+function getPriceForRoom(rng) {
+  const base = 10000;
+  const range = 20000;
+  return Math.round((base + rng() * range) / 500) * 500;
+}
+
+function renderPage() {
+  const params = new URLSearchParams(window.location.search);
+  const slug = params.get('slug');
+
+  if (!slug) {
+    window.location.href = 'building.html';
+    return;
+  }
+
+  const building = BUILDINGS.find(b => b.slug === slug);
+
+  if (!building) {
+    document.getElementById('page-content').innerHTML = `
+      <div class="bdetail-main">
+        <div class="not-found">
+          <h2>建物が見つかりませんでした</h2>
+          <p>指定された建物は存在しないか、URLが正しくありません。</p>
+          <a href="building.html" class="btn btn--primary">建物一覧へ戻る</a>
+        </div>
+      </div>`;
+    return;
+  }
+
+  document.title = building.name + ' | sumyca stay';
+
+  const rng = seededRandom(slugToSeed(slug));
+
+  // Generate room data
+  const roomData = building.rooms.map(roomNum => {
+    const price = getPriceForRoom(rng);
+    const isOpen = rng() < 0.70;
+    const type = getRoomType(roomNum);
+    return { roomNum, price, isOpen, type };
+  });
+
+  // Build about text
+  const cityNames = { tokyo:'東京', osaka:'大阪', kyoto:'京都', kanagawa:'神奈川', saitama:'埼玉', chiba:'千葉', kumamoto:'熊本', resort:'リゾート地', default:'全国' };
+  const cityLabel = cityNames[building.city] || cityNames.default;
+  const aboutText = `${building.name}は、${building.area}エリアに位置する sumyca stay の管理物件です。${building.station !== '未定' ? `最寄り駅は${building.station}駅で、アクセスも抜群です。` : ''}全${building.rooms.length}室を取り揃えており、短期から長期まで柔軟にご利用いただけます。`;
+
+  // Related buildings (same city, different slug)
+  const related = BUILDINGS
+    .filter(b => b.city === building.city && b.slug !== building.slug)
+    .sort(() => rng() - 0.5)
+    .slice(0, 3);
+
+  // Render rooms
+  const roomCards = roomData.map(r => {
+    if (r.isOpen) {
+      return `<a href="property-detail.html" class="room-card">
+        <div class="room-card__num">${r.roomNum}号室</div>
+        <div class="room-card__label">${r.type}</div>
+        <div class="room-card__price">¥${r.price.toLocaleString()}<span>/泊〜</span></div>
+        <div class="room-card__avail room-card__avail--open">空室あり</div>
+      </a>`;
+    } else {
+      return `<div class="room-card room-card--full">
+        <div class="room-card__num">${r.roomNum}号室</div>
+        <div class="room-card__label">${r.type}</div>
+        <div class="room-card__price">¥${r.price.toLocaleString()}<span>/泊〜</span></div>
+        <div class="room-card__avail room-card__avail--full">満室</div>
+      </div>`;
+    }
+  }).join('');
+
+  // Render related buildings
+  const relatedCards = related.map(b => `
+    <a href="building-detail.html?slug=${b.slug}" class="related-bcard">
+      <img class="related-bcard__img" src="https://images.unsplash.com/${b.img}?w=120&h=120&fit=crop" alt="${b.name}" loading="lazy">
+      <div>
+        <div class="related-bcard__name">${b.name}</div>
+        <div class="related-bcard__meta">${b.area} · ${b.rooms.length}室</div>
+      </div>
+    </a>
+  `).join('');
+
+  const openRooms = roomData.filter(r => r.isOpen).length;
+
+  document.getElementById('page-content').innerHTML = `
+    <!-- Hero -->
+    <section class="bdetail-hero">
+      <div class="bdetail-hero__inner">
+        <div class="bdetail-breadcrumb">
+          <a href="index.html">ホーム</a> &nbsp;/&nbsp;
+          <a href="building.html">建物から探す</a> &nbsp;/&nbsp;
+          <span>${building.name}</span>
+        </div>
+        <div class="bdetail-hero__layout">
+          <div>
+            <div class="bdetail-hero__badge">${cityLabel}</div>
+            <h1 class="bdetail-hero__name">${building.name}</h1>
+            <div class="bdetail-hero__meta">
+              <span>📍 ${building.area}</span>
+              ${building.station !== '未定' ? `<span>🚉 ${building.station}駅</span>` : ''}
+              <span>🏠 全${building.rooms.length}室</span>
+              <span style="color:#4ade80;">● 空室 ${openRooms}室</span>
+            </div>
+          </div>
+          <div class="bdetail-hero__img">
+            <img src="https://images.unsplash.com/${building.img}?w=880&h=480&fit=crop" alt="${building.name}">
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Main content -->
+    <div class="bdetail-main">
+      <div class="bdetail-layout">
+        <!-- Left: about + rooms -->
+        <div>
+          <div class="bdetail-about">
+            <h2>この建物について</h2>
+            <p>${aboutText}</p>
+          </div>
+
+          <div class="bdetail-rooms-header">
+            <h2>全室一覧</h2>
+            <span class="bdetail-rooms-count">${building.rooms.length}室</span>
+          </div>
+          <div class="room-grid">
+            ${roomCards}
+          </div>
+        </div>
+
+        <!-- Right: sidebar -->
+        <div class="bdetail-sidebar">
+          <div class="sidebar-card">
+            <h3>建物情報</h3>
+            <div class="stat-row">
+              <span class="stat-row__label">室数</span>
+              <span class="stat-row__value">${building.rooms.length}室</span>
+            </div>
+            <div class="stat-row">
+              <span class="stat-row__label">エリア</span>
+              <span class="stat-row__value">${building.area}</span>
+            </div>
+            <div class="stat-row">
+              <span class="stat-row__label">最寄り駅</span>
+              <span class="stat-row__value">${building.station}</span>
+            </div>
+            <div class="stat-row">
+              <span class="stat-row__label">空室</span>
+              <span class="stat-row__value" style="color:#16a34a;">${openRooms}室</span>
+            </div>
+            <div class="stat-row">
+              <span class="stat-row__label">都市</span>
+              <span class="stat-row__value">${cityLabel}</span>
+            </div>
+          </div>
+
+          ${related.length > 0 ? `
+          <div class="sidebar-card">
+            <div class="related-buildings">
+              <h3>他の建物も見る</h3>
+              ${relatedCards}
+              <a href="building.html" style="display:block;margin-top:16px;text-align:center;font-size:0.8125rem;font-weight:700;color:var(--teal);text-decoration:none;">全建物一覧 →</a>
+            </div>
+          </div>
+          ` : ''}
+        </div>
+      </div>
+    </div>
+  `;
+}
+
+renderPage();
+</script>
+</body>
+</html>
