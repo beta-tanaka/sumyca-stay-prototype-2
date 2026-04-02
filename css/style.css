@@ -198,11 +198,11 @@ body {
 
 /* ---- Hero ---- */
 .hero {
-  min-height: 88vh;
+  min-height: 92vh;
   position: relative;
   display: flex;
-  align-items: center;
-  justify-content: center;
+  align-items: flex-start;
+  justify-content: flex-end;
   overflow: hidden;
 }
 .hero__bg {
@@ -219,12 +219,11 @@ body {
 }
 .hero__content {
   position: relative; z-index: 2;
-  text-align: center;
+  text-align: left;
   color: var(--white);
-  padding: 40px 24px;
+  padding: 48px 48px 64px;
   width: 100%;
   max-width: 860px;
-  margin: 0 auto;
 }
 .hero__label {
   display: inline-block;
@@ -1467,3 +1466,22 @@ body {
   border-radius: 50%;
   display: flex; align-items: center; justify-content: center;
 }
+
+/* ---- Hero Wordmark (フェーズ5 デザイン適用) ---- */
+.hero-dark__wordmark {
+  position: absolute;
+  top: 28px; left: 40px; z-index: 3;
+  font-size: clamp(4.5rem, 14vw, 11rem);
+  font-weight: 900; letter-spacing: -0.05em; line-height: 1;
+  color: var(--amber); pointer-events: none; user-select: none;
+}
+.hero-dark__wordmark span {
+  display: block; font-size: 0.28em; font-weight: 700;
+  letter-spacing: 0.18em; text-transform: uppercase;
+  color: rgba(255,255,255,0.55); margin-top: -0.1em;
+}
+@media (max-width: 768px) {
+  .hero-dark__wordmark { font-size: clamp(3rem, 16vw, 6rem); top: 16px; left: 16px; }
+}
+
+.hero .search-bar { margin: 0; }
