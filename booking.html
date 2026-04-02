@@ -283,12 +283,7 @@
         <a href="property-detail.html">← 物件詳細に戻る</a>
         <a href="my-trips.html">マイ予約</a>
       </nav>
-      <div class="header__actions">
-        <div class="lang-toggle">
-          <button class="lang-btn active" onclick="setLang('ja',this)">JP</button>
-          <button class="lang-btn" onclick="setLang('en',this)">EN</button>
-        </div>
-        <a href="login.html" class="btn btn--outline btn--sm">ログイン</a>
+      <div class="header__actions">        <a href="login.html" class="btn btn--outline btn--sm">ログイン</a>
         <a href="login.html" class="btn btn--accent btn--sm">無料会員登録</a>
         <button class="hamburger" onclick="document.getElementById('mm').classList.add('open')" aria-label="メニュー">
           <span></span><span></span><span></span>
@@ -299,12 +294,7 @@
 
   <div class="mobile-menu" id="mm">
     <button class="mobile-menu__close" onclick="document.getElementById('mm').classList.remove('open')">✕</button>
-    <div class="mobile-menu__logo">sumyca <span>stay</span></div>
-    <div class="mobile-menu__lang">
-      <button class="lang-btn active" onclick="setLang('ja',this)">JP</button>
-      <button class="lang-btn" onclick="setLang('en',this)">EN</button>
-    </div>
-    <nav class="mobile-menu__nav">
+    <div class="mobile-menu__logo">sumyca <span>stay</span></div>    <nav class="mobile-menu__nav">
       <a href="search.html">物件を探す</a>
       <a href="area.html">エリアガイド</a>
       <a href="my-trips.html">マイ予約</a>
@@ -516,12 +506,6 @@
   </main>
 
   <script>
-    function setLang(lang, btn) {
-      document.querySelectorAll('.lang-btn').forEach(b => b.classList.remove('active'));
-      btn.classList.add('active');
-      document.documentElement.lang = lang;
-    }
-
     function selectTrack(track, btn) {
       document.querySelectorAll('.track-btn').forEach(b => b.classList.remove('active'));
       btn.classList.add('active');

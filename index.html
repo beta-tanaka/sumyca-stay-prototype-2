@@ -238,12 +238,7 @@
         <a href="building.html">建物から探す</a>
         <a href="my-trips.html">マイ予約</a>
       </nav>
-      <div class="header__actions">
-        <div class="lang-toggle">
-          <button class="lang-btn active" onclick="setLang('ja',this)">JP</button>
-          <button class="lang-btn" onclick="setLang('en',this)">EN</button>
-        </div>
-        <a href="login.html" class="btn btn--outline btn--sm">ログイン</a>
+      <div class="header__actions">        <a href="login.html" class="btn btn--outline btn--sm">ログイン</a>
         <a href="login.html" class="btn btn--accent btn--sm">無料会員登録</a>
         <button class="hamburger" onclick="document.getElementById('mm').classList.add('open')" aria-label="メニュー">
           <span></span><span></span><span></span>
@@ -506,9 +501,7 @@
     </div>
   </footer>
 
-  <script>
-    function setLang(lang, btn) {
-      document.querySelectorAll('.lang-btn').forEach(function(b){ b.classList.remove('active'); });
+  <script>);
       btn.classList.add('active');
       document.documentElement.lang = lang;
     }

@@ -1037,28 +1037,6 @@ body {
    ============================================================ */
 
 /* ---- Language toggle ---- */
-.lang-toggle {
-  display: flex;
-  align-items: center;
-  gap: 2px;
-  background: var(--gray-1);
-  border-radius: 20px;
-  padding: 3px;
-  border: 1px solid var(--gray-2);
-}
-.lang-btn {
-  padding: 4px 10px;
-  font-size: 0.7rem;
-  font-weight: 700;
-  border-radius: 16px;
-  border: none;
-  background: transparent;
-  color: var(--gray-3);
-  cursor: pointer;
-  transition: background 0.15s, color 0.15s;
-  font-family: var(--font);
-}
-.lang-btn.active { background: var(--teal); color: var(--white); }
 
 /* ---- Mobile sticky bottom CTA (index hero) ---- */
 .mobile-cta-bar {

@@ -28,12 +28,7 @@
         <a href="area.html">エリアガイド</a>
         <a href="my-trips.html">マイ予約</a>
       </nav>
-      <div class="header__actions">
-        <div class="lang-toggle">
-          <button class="lang-btn active" onclick="setLang('ja',this)">JP</button>
-          <button class="lang-btn" onclick="setLang('en',this)">EN</button>
-        </div>
-        <button class="hamburger" onclick="document.getElementById('mm').classList.add('open')" aria-label="メニュー">
+      <div class="header__actions">        <button class="hamburger" onclick="document.getElementById('mm').classList.add('open')" aria-label="メニュー">
           <span></span><span></span><span></span>
         </button>
       </div>
@@ -179,9 +174,7 @@
     </div>
   </footer>
 
-  <script>
-    function setLang(lang, btn) {
-      document.querySelectorAll('.lang-btn').forEach(function(b){ b.classList.remove('active'); });
+  <script>);
       btn.classList.add('active');
       document.documentElement.lang = lang;
     }

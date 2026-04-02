@@ -353,12 +353,7 @@
         <a href="building.html">建物から探す</a>
         <a href="my-trips.html">マイ予約</a>
       </nav>
-      <div class="header__actions">
-        <div class="lang-toggle">
-          <button class="lang-btn active" onclick="setLang('ja',this)">JP</button>
-          <button class="lang-btn" onclick="setLang('en',this)">EN</button>
-        </div>
-        <a href="login.html" class="btn btn--outline btn--sm">ログイン</a>
+      <div class="header__actions">        <a href="login.html" class="btn btn--outline btn--sm">ログイン</a>
         <a href="login.html" class="btn btn--accent btn--sm">無料会員登録</a>
         <button class="hamburger" onclick="document.getElementById('mobile-menu').classList.add('open')"><span></span><span></span><span></span></button>
       </div>
@@ -368,12 +363,7 @@
   <!-- Mobile menu -->
   <div class="mobile-menu" id="mobile-menu">
     <button class="mobile-menu__close" onclick="document.getElementById('mobile-menu').classList.remove('open')">✕</button>
-    <div class="mobile-menu__logo">sumyca <span>stay</span></div>
-    <div class="mobile-menu__lang">
-      <button class="lang-btn active" onclick="setLang('ja',this)">JP</button>
-      <button class="lang-btn" onclick="setLang('en',this)">EN</button>
-    </div>
-        <nav class="mobile-menu__nav">
+    <div class="mobile-menu__logo">sumyca <span>stay</span></div>        <nav class="mobile-menu__nav">
       <a href="index.html">ホーム</a>
       <a href="search.html">物件を探す</a>
       <a href="area.html">エリアから探す</a>
@@ -677,17 +667,6 @@
       });
     }
 
-    /* =====================================================
-       LANG TOGGLE
-    ===================================================== */
-    function setLang(lang, btn) {
-      document.querySelectorAll('.lang-btn').forEach(function(b) { b.classList.remove('active'); });
-      // toggle all matching buttons (header + mobile)
-      document.querySelectorAll('.lang-btn').forEach(function(b) {
-        if (b.textContent.trim() === btn.textContent.trim()) b.classList.add('active');
-      });
-      document.documentElement.lang = lang;
-    }
 
     /* =====================================================
        INIT

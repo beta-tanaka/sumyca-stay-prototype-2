@@ -49,12 +49,7 @@
         <a href="building.html">建物から探す</a>
         <a href="my-trips.html">マイ予約</a>
       </nav>
-    <div class="header__actions">
-      <div class="lang-toggle">
-        <button class="lang-btn active" onclick="setLang('ja',this)">JP</button>
-        <button class="lang-btn" onclick="setLang('en',this)">EN</button>
-      </div>
-      <a href="#" class="btn btn--outline btn--sm">ログイン</a>
+    <div class="header__actions">      <a href="#" class="btn btn--outline btn--sm">ログイン</a>
       <a href="#" class="btn btn--primary btn--sm">会員登録</a>
       <button class="hamburger" onclick="document.getElementById('mobile-menu').classList.add('open')"><span></span><span></span><span></span></button>
     </div>
@@ -62,12 +57,7 @@
 </header>
 <div class="mobile-menu" id="mobile-menu">
   <button class="mobile-menu__close" onclick="document.getElementById('mobile-menu').classList.remove('open')">✕</button>
-  <div class="mobile-menu__logo">sumyca <span>stay</span></div>
-  <div class="mobile-menu__lang">
-    <button class="lang-btn active" onclick="setLang('ja',this)">JP</button>
-    <button class="lang-btn" onclick="setLang('en',this)">EN</button>
-  </div>
-      <nav class="mobile-menu__nav">
+  <div class="mobile-menu__logo">sumyca <span>stay</span></div>      <nav class="mobile-menu__nav">
       <a href="index.html">ホーム</a>
       <a href="search.html">物件を探す</a>
       <a href="area.html">エリアから探す</a>
@@ -116,8 +106,6 @@
 </footer>
 
 <script>
-function setLang(lang,btn){document.querySelectorAll('.lang-btn').forEach(b=>b.classList.remove('active'));btn.classList.add('active');document.documentElement.lang=lang;}
-
 const BUILDINGS = [
   // --- A ---
   {slug:'airose-awajibashi', name:'AIROSE 淡路橋', area:'大阪', city:'osaka', station:'淡路橋', rooms:['201','301','302'], img:'photo-1522708323590-d24dbb6b0267'},
