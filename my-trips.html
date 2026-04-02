@@ -258,9 +258,6 @@
   </footer>
 
   <script>);
-      btn.classList.add('active');
-      document.documentElement.lang = lang;
-    }
     function showLoggedIn() {
       document.getElementById('trips-gate').classList.add('hidden');
       document.getElementById('trips-logged-in').classList.add('visible');
@@ -269,11 +266,9 @@
 
     function filterTrips(status, btn) {
       document.querySelectorAll('.trips-tab').forEach(t => t.classList.remove('active'));
-      btn.classList.add('active');
       document.querySelectorAll('.trip-card').forEach(card => {
         card.style.display = (status === 'all' || card.dataset.status === status) ? 'grid' : 'none';
       });
-    }
 
     /* =====================================================
        CHAT

@@ -308,7 +308,6 @@ let currentList = BUILDINGS;
 
 function filterBuildings(cat, btn) {
   document.querySelectorAll('.btab').forEach(b => b.classList.remove('active'));
-  btn.classList.add('active');
   document.getElementById('search-input').value = '';
 
   if (cat === 'all') {
