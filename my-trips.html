@@ -257,7 +257,7 @@
     </div>
   </footer>
 
-  <script>);
+  <script>
     function showLoggedIn() {
       document.getElementById('trips-gate').classList.add('hidden');
       document.getElementById('trips-logged-in').classList.add('visible');
@@ -269,6 +269,8 @@
       document.querySelectorAll('.trip-card').forEach(card => {
         card.style.display = (status === 'all' || card.dataset.status === status) ? 'grid' : 'none';
       });
+      btn.classList.add('active');
+    }
 
     /* =====================================================
        CHAT
